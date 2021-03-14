@@ -26,6 +26,7 @@ export class PipelineStack extends Stack {
       }),
 
       synthAction: SimpleSynthAction.standardNpmSynth({
+        synthCommand: 'cd deploy && npx cdk synth',
         sourceArtifact,
         cloudAssemblyArtifact,
       }),
