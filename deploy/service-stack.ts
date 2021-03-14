@@ -1,5 +1,4 @@
-import * as cdk from '@aws-cdk/core';
-import { Duration } from '@aws-cdk/core';
+import { Construct, Duration, Stack, StackProps } from '@aws-cdk/core';
 import {
   EcsClusterMain,
   LoadBalancerMain,
@@ -20,8 +19,8 @@ import {
 import { IVpc } from '@aws-cdk/aws-ec2';
 import { RetentionDays } from '@aws-cdk/aws-logs';
 
-export class NailsServiceStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+export class ServiceStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
     const vpcMain = new VpcMain(this, 'vpc-main');
