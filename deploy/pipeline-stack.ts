@@ -14,6 +14,7 @@ export class PipelineStack extends Stack {
     const pipeline = new CdkPipeline(this, 'nails-service-pipeline', {
       pipelineName: 'nails-service',
       cloudAssemblyArtifact,
+      crossAccountKeys: false,
 
       sourceAction: new GitHubSourceAction({
         actionName: 'GitHub',
