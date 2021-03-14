@@ -1,17 +1,16 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Logger } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  private readonly logger = new Logger(AppController.name);
 
-  @Get('nails')
-  getNails(): string {
-    return 'Nails!';
-  }
+  constructor(private readonly appService: AppService) {}
 
   @Get()
   getHello(): string {
+    this.logger.log('Got a getHello request.');
+
     return this.appService.getHello();
   }
 }

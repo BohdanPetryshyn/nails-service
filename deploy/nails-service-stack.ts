@@ -87,6 +87,7 @@ export class NailsServiceStack extends cdk.Stack {
         vpc: vpc,
         protocol: ApplicationProtocol.HTTP,
         healthCheck: {
+          path: '/nails',
           interval: Duration.seconds(5),
           timeout: Duration.seconds(2),
           healthyThresholdCount: 2,
