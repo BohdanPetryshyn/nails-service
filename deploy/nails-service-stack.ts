@@ -1,4 +1,5 @@
 import * as cdk from '@aws-cdk/core';
+import { Duration } from '@aws-cdk/core';
 import {
   EcsClusterMain,
   LoadBalancerMain,
@@ -8,6 +9,7 @@ import {
   ContainerImage,
   Ec2Service,
   Ec2TaskDefinition,
+  LogDriver,
   Protocol as EcsProtocol,
 } from '@aws-cdk/aws-ecs';
 import {
@@ -16,7 +18,7 @@ import {
   ListenerCondition,
 } from '@aws-cdk/aws-elasticloadbalancingv2';
 import { IVpc } from '@aws-cdk/aws-ec2';
-import { Duration } from '@aws-cdk/core';
+import { RetentionDays } from '@aws-cdk/aws-logs';
 
 export class NailsServiceStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -53,6 +55,10 @@ export class NailsServiceStack extends cdk.Stack {
       memoryLimitMiB: 256,
       cpu: 256,
       stopTimeout: Duration.seconds(2),
+      logging: LogDriver.awsLogs({
+        streamPrefix: 'nails-service',
+        logRetention: RetentionDays.ONE_WEEK,
+      }),
     });
 
     container.addPortMappings({
