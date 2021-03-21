@@ -1,0 +1,52 @@
+{
+  "ssm:account=596647861466:parameterName=nails-vpc-main-id:region=eu-central-1": "vpc-0d24220421a5ae092",
+  "ssm:account=596647861466:parameterName=nails-ecs-cluster-main-name:region=eu-central-1": "nails-ecs-cluster-main",
+  "ssm:account=596647861466:parameterName=nails-load-balancer-main-arn:region=eu-central-1": "arn:aws:elasticloadbalancing:eu-central-1:596647861466:loadbalancer/app/load-loadb-J7NVSRJA7C8E/723acbe1fc36c4ee",
+  "ssm:account=596647861466:parameterName=nails-load-balancer-main-http-listener-arn:region=eu-central-1": "arn:aws:elasticloadbalancing:eu-central-1:596647861466:listener/app/load-loadb-J7NVSRJA7C8E/723acbe1fc36c4ee/831a67c1edf27da4",
+  "vpc-provider:account=596647861466:filter.vpc-id=vpc-0d24220421a5ae092:region=eu-central-1:returnAsymmetricSubnets=true": {
+    "vpcId": "vpc-0d24220421a5ae092",
+    "vpcCidrBlock": "10.0.0.0/16",
+    "availabilityZones": [],
+    "subnetGroups": [
+      {
+        "name": "main-ecs-cluster",
+        "type": "Public",
+        "subnets": [
+          {
+            "subnetId": "subnet-0b1a706dba6164257",
+            "cidr": "10.0.0.0/24",
+            "availabilityZone": "eu-central-1a",
+            "routeTableId": "rtb-0951f1e943f0811b2"
+          },
+          {
+            "subnetId": "subnet-09844f2fd17aa4e70",
+            "cidr": "10.0.1.0/24",
+            "availabilityZone": "eu-central-1b",
+            "routeTableId": "rtb-03491c1206dd5d112"
+          }
+        ]
+      }
+    ]
+  },
+  "load-balancer:account=596647861466:loadBalancerArn=arn$:aws:elasticloadbalancing:eu-central-1:596647861466:loadbalancer/app/load-loadb-J7NVSRJA7C8E/723acbe1fc36c4ee:loadBalancerType=application:region=eu-central-1": {
+    "loadBalancerArn": "arn:aws:elasticloadbalancing:eu-central-1:596647861466:loadbalancer/app/load-loadb-J7NVSRJA7C8E/723acbe1fc36c4ee",
+    "loadBalancerCanonicalHostedZoneId": "Z215JYRZR1TBD5",
+    "loadBalancerDnsName": "load-loadb-J7NVSRJA7C8E-1060774176.eu-central-1.elb.amazonaws.com",
+    "vpcId": "vpc-0d24220421a5ae092",
+    "securityGroupIds": [
+      "sg-0479e71016ba13fb8"
+    ],
+    "ipAddressType": "ipv4"
+  },
+  "load-balancer-listener:account=596647861466:listenerArn=arn$:aws:elasticloadbalancing:eu-central-1:596647861466:listener/app/load-loadb-J7NVSRJA7C8E/723acbe1fc36c4ee/831a67c1edf27da4:loadBalancerType=application:region=eu-central-1": {
+    "listenerArn": "arn:aws:elasticloadbalancing:eu-central-1:596647861466:listener/app/load-loadb-J7NVSRJA7C8E/723acbe1fc36c4ee/831a67c1edf27da4",
+    "listenerPort": 80,
+    "securityGroupIds": [
+      "sg-0479e71016ba13fb8"
+    ]
+  },
+  "security-group:account=596647861466:region=eu-central-1:securityGroupId=sg-0479e71016ba13fb8": {
+    "securityGroupId": "sg-0479e71016ba13fb8",
+    "allowAllOutbound": false
+  }
+}
