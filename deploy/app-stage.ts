@@ -5,6 +5,8 @@ export class AppStage extends Stage {
   constructor(scope: Construct, id: string, props: StageProps) {
     super(scope, id, props);
 
-    new ServiceStack(this, 'nails-service-stack');
+    new ServiceStack(this, 'nails-service-stack', {
+      env: props.env,
+    });
   }
 }
