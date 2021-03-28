@@ -1,9 +1,12 @@
 import { HttpModule, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { GoogleUserService } from './user/google-user.service';
+import { GoogleUsersService } from './user/google-users.service';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthController } from './auth.controller';
 
 @Module({
-  imports: [HttpModule],
-  providers: [AuthService, GoogleUserService],
+  imports: [HttpModule, JwtModule.register({ secret: 'test-secret' })],
+  providers: [AuthService, GoogleUsersService],
+  controllers: [AuthController],
 })
 export class AuthModule {}
