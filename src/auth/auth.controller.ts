@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Req, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthResponse } from './auth-response';
-import { User } from './users/user';
+import { UserPersonalData } from './personal-data/userPersonalData';
 import { JwtAuthGuard } from './jwt/jwt.guard';
-import { AuthedRequest } from './users/authed-request';
+import { AuthedRequest } from './personal-data/authed-request';
 
 @Controller('auth')
 export class AuthController {
@@ -24,7 +24,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  getMe(@Req() request: AuthedRequest): User {
+  getMe(@Req() request: AuthedRequest): UserPersonalData {
     return request.user;
   }
 }

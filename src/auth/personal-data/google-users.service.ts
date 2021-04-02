@@ -1,11 +1,11 @@
 import { HttpService, Injectable } from '@nestjs/common';
-import { User } from './user';
+import { UserPersonalData } from './userPersonalData';
 
 @Injectable()
 export class GoogleUsersService {
   constructor(private readonly http: HttpService) {}
 
-  async get(accessToken: string): Promise<User> {
+  async get(accessToken: string): Promise<UserPersonalData> {
     const fetchedUser = await this.http
       .get('https://www.googleapis.com/userinfo/v2/me', {
         headers: {
@@ -15,7 +15,7 @@ export class GoogleUsersService {
       .toPromise()
       .then((response) => response.data);
 
-    return User.fromPlain({
+    return UserPersonalData.fromPlain({
       email: fetchedUser.email,
       firstName: fetchedUser.given_name,
       lastName: fetchedUser.family_name,
