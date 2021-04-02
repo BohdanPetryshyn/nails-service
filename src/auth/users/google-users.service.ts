@@ -15,11 +15,14 @@ export class GoogleUsersService {
       .toPromise()
       .then((response) => response.data);
 
-    return {
+    return User.fromPlain({
       email: fetchedUser.email,
       firstName: fetchedUser.given_name,
       lastName: fetchedUser.family_name,
-    };
+      gender: fetchedUser.gender,
+      locale: fetchedUser.locale,
+      pictureUrl: fetchedUser.picture,
+    });
   }
 
   private getAuthenticationHeader(accessToken: string): string {
