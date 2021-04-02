@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { HealthCheckController } from './healthcheck/healthcheck.controller';
 
-@Module({})
+@Module({
+  controllers: [HealthCheckController],
+})
 export class CoreModule {}
