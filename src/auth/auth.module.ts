@@ -4,9 +4,14 @@ import { GooglePersonalDataService } from './personal-data/google-personal-data.
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt/jwt.strategy';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [HttpModule, JwtModule.register({ secret: 'test-secret' })],
+  imports: [
+    UsersModule,
+    HttpModule,
+    JwtModule.register({ secret: 'test-secret' }),
+  ],
   providers: [AuthService, GooglePersonalDataService, JwtStrategy],
   controllers: [AuthController],
 })

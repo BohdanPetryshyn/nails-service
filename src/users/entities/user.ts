@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { Exclude, Expose, Type } from 'class-transformer';
 import { PersonalData } from './personal-data';
-import { IsEnum, ValidateNested } from 'class-validator';
+import { IsEnum, IsOptional, ValidateNested } from 'class-validator';
 import instantiateAndValidate from '../../core/validation/instantiate-and-validate';
 
 export enum Role {
@@ -21,8 +21,9 @@ export class User {
 
   @Expose()
   @IsEnum(Role)
-  @Prop({ required: true })
-  role: Role;
+  @IsOptional()
+  @Prop()
+  role?: Role;
 
   static fromPlain(plain: User) {
     return instantiateAndValidate(User, plain);
