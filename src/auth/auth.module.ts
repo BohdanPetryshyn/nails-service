@@ -5,12 +5,18 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt/jwt.strategy';
 import { UsersModule } from '../users/users.module';
+import { JwtConfigFactory } from './jwt/jwt-config-factory';
+import { AppConfigModule } from '../config/app-config.module';
 
 @Module({
   imports: [
     UsersModule,
     HttpModule,
-    JwtModule.register({ secret: 'test-secret' }),
+    AppConfigModule,
+    JwtModule.registerAsync({
+      imports: [AppConfigModule],
+      useClass: JwtConfigFactory,
+    }),
   ],
   providers: [AuthService, GooglePersonalDataService, JwtStrategy],
   controllers: [AuthController],
