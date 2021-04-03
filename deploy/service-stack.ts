@@ -58,17 +58,23 @@ export class ServiceStack extends Stack {
       stopTimeout: Duration.seconds(2),
       secrets: {
         MONGO_CONNECTION_STRING: Secret.fromSsmParameter(
-          StringParameter.fromStringParameterName(
+          StringParameter.fromSecureStringParameterAttributes(
             this,
             'mongo-connection-string-secret',
-            'nails-service-mongo-connection-string',
+            {
+              parameterName: 'nails-service-mongo-connection-string',
+              version: 1,
+            },
           ),
         ),
         JWT_SECRET: Secret.fromSsmParameter(
-          StringParameter.fromStringParameterName(
+          StringParameter.fromSecureStringParameterAttributes(
             this,
             'jwt-secret',
-            'nails-service-jwt-secret',
+            {
+              parameterName: 'nails-service-jwt-secret',
+              version: 1,
+            },
           ),
         ),
       },
