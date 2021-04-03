@@ -10,6 +10,7 @@ import {
   Ec2TaskDefinition,
   LogDriver,
   Protocol as EcsProtocol,
+  Secret,
 } from '@aws-cdk/aws-ecs';
 import {
   ApplicationProtocol,
@@ -18,6 +19,7 @@ import {
 } from '@aws-cdk/aws-elasticloadbalancingv2';
 import { IVpc } from '@aws-cdk/aws-ec2';
 import { RetentionDays } from '@aws-cdk/aws-logs';
+import { StringParameter } from '@aws-cdk/aws-ssm';
 
 export class ServiceStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -54,6 +56,22 @@ export class ServiceStack extends Stack {
       memoryLimitMiB: 256,
       cpu: 256,
       stopTimeout: Duration.seconds(2),
+      secrets: {
+        MONGO_CONNECTION_STRING: Secret.fromSsmParameter(
+          StringParameter.fromStringParameterName(
+            this,
+            'mongo-connection-string-secret',
+            'nails-service-mongo-connection-string',
+          ),
+        ),
+        JWT_SECRET: Secret.fromSsmParameter(
+          StringParameter.fromStringParameterName(
+            this,
+            'jwt-secret',
+            'nails-service-jwt-secret',
+          ),
+        ),
+      },
       logging: LogDriver.awsLogs({
         streamPrefix: 'nails-service',
         logRetention: RetentionDays.ONE_WEEK,
