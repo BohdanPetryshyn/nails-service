@@ -110,7 +110,7 @@ export class ServiceStack extends Stack {
         vpc: vpc,
         protocol: ApplicationProtocol.HTTP,
         healthCheck: {
-          path: '/nails',
+          path: '/nails/healthcheck',
           interval: Duration.seconds(5),
           timeout: Duration.seconds(2),
           healthyThresholdCount: 2,
