@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { GooglePersonalDataService } from './personal-data/google-personal-data.service';
-import { UsersService } from '../users/users.service';
-import { Payload } from './jwt/payload';
+import { GooglePersonalDataService } from '../personal-data/google-personal-data.service';
+import { UsersService } from '../../users/users.service';
+import { Payload } from '../jwt/payload';
 
 @Injectable()
-export class AuthService {
+export class LoginService {
   constructor(
     private readonly googlePersonalDataService: GooglePersonalDataService,
     private readonly usersService: UsersService,
