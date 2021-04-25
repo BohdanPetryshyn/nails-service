@@ -12,6 +12,7 @@ export class MongooseConfigFactory implements MongooseOptionsFactory {
   createMongooseOptions(): MongooseModuleOptions {
     return {
       uri: this.configService.getMongoConnectionString(),
+      useFindAndModify: false,
     };
   }
 }

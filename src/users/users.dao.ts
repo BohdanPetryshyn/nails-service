@@ -1,4 +1,4 @@
-import { User, UserDocument } from './entities/user';
+import { Role, User, UserDocument } from './entities/user';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
@@ -23,5 +23,17 @@ export class UsersDao {
       )
       .exec();
     return User.fromPlain(userDocument);
+  }
+
+  async setRoleIfNotSet(userEmail: string, role: Role): Promise<User | null> {
+    const userDocument = await this.userModel
+      .findOneAndUpdate(
+        { ['personalData.email']: userEmail, role: null },
+        { role },
+        { new: true },
+      )
+      .exec();
+
+    return userDocument && User.fromPlain(userDocument);
   }
 }

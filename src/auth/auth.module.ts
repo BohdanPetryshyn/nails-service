@@ -8,6 +8,8 @@ import { JwtConfigFactory } from './jwt/jwt-config-factory';
 import { AppConfigModule } from '../config/app-config.module';
 import { LoginController } from './login/login.controller';
 import { LoginService } from './login/login.service';
+import { RolesService } from './role/roles.service';
+import { RolesController } from './role/roles.controller';
 
 @Module({
   imports: [
@@ -19,7 +21,12 @@ import { LoginService } from './login/login.service';
       useClass: JwtConfigFactory,
     }),
   ],
-  providers: [LoginService, GooglePersonalDataService, JwtStrategy],
-  controllers: [AuthController, LoginController],
+  providers: [
+    LoginService,
+    RolesService,
+    GooglePersonalDataService,
+    JwtStrategy,
+  ],
+  controllers: [AuthController, LoginController, RolesController],
 })
 export class AuthModule {}
