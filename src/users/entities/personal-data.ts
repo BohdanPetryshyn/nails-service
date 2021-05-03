@@ -1,6 +1,12 @@
 import { Prop, Schema } from '@nestjs/mongoose';
 import { Exclude, Expose } from 'class-transformer';
-import { IsEmail, IsLocale, IsNotEmpty, IsUrl } from 'class-validator';
+import {
+  IsEmail,
+  IsLocale,
+  IsNotEmpty,
+  IsOptional,
+  IsUrl,
+} from 'class-validator';
 import instantiateAndValidate from '../../core/validation/instantiate-and-validate';
 
 @Exclude()
@@ -22,8 +28,9 @@ export class PersonalData {
   lastName: string;
 
   @Expose()
-  @Prop({ required: true })
-  gender: string;
+  @IsOptional()
+  @Prop()
+  gender?: string;
 
   @Expose()
   @IsLocale()

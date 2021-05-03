@@ -21,6 +21,7 @@ export class LoginService {
 
     const payload = Payload.fromPlain({
       personalData: user.personalData,
+      role: user.role,
     });
 
     return this.jwtService.sign(JSON.stringify(payload));
