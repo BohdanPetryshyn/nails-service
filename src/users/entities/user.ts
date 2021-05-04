@@ -22,7 +22,7 @@ export class User {
   @Expose()
   @IsEnum(Role)
   @IsOptional()
-  @Prop({ enum: Role })
+  @Prop({ enum: Role, index: true })
   role?: Role;
 
   static fromPlain(plain: User) {
