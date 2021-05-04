@@ -6,6 +6,8 @@ import { MongoModule } from '../mongo/mongo.module';
 import { UsersService } from './users.service';
 import { ClientSchema } from './entities/client';
 import { MasterSchema } from './entities/master';
+import { MastersDao } from './masters.dao';
+import { MastersService } from './masters.service';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { MasterSchema } from './entities/master';
       },
     ]),
   ],
-  providers: [UsersDao, UsersService],
+  providers: [UsersDao, MastersDao, UsersService, MastersService],
   exports: [UsersService],
 })
 export class UsersModule {}

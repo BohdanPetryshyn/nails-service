@@ -12,14 +12,10 @@ export class UsersDao {
   ) {}
 
   async getOrCreate(personalData: PersonalData): Promise<User> {
-    const newUser = User.fromPlain({
-      personalData,
-    });
-
     const userDocument = await this.userModel
       .findOneAndUpdate(
         { ['personalData.email']: personalData.email },
-        { $setOnInsert: newUser },
+        { $setOnInsert: { personalData } },
         { new: true, upsert: true },
       )
       .exec();
