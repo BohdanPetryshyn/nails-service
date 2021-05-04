@@ -11,7 +11,7 @@ export enum Role {
 }
 
 @Exclude()
-@Schema()
+@Schema({ discriminatorKey: 'role' })
 export class User {
   @Expose()
   @ValidateNested()
@@ -22,7 +22,7 @@ export class User {
   @Expose()
   @IsEnum(Role)
   @IsOptional()
-  @Prop()
+  @Prop({ enum: Role })
   role?: Role;
 
   static fromPlain(plain: User) {

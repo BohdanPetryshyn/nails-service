@@ -3,6 +3,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 import { PersonalData } from './entities/personal-data';
+import { instantiateAndValidateUser } from './entities/instantiate-and-validate-user';
 
 @Injectable()
 export class UsersDao {
@@ -22,7 +23,7 @@ export class UsersDao {
         { new: true, upsert: true },
       )
       .exec();
-    return User.fromPlain(userDocument);
+    return instantiateAndValidateUser(userDocument);
   }
 
   async setRoleIfNotSet(userEmail: string, role: Role): Promise<User | null> {
@@ -34,6 +35,6 @@ export class UsersDao {
       )
       .exec();
 
-    return userDocument && User.fromPlain(userDocument);
+    return userDocument && instantiateAndValidateUser(userDocument);
   }
 }
