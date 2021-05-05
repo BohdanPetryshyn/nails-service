@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Role, User } from '../../users/entities/user';
+import { Role } from '../../users/entities/user';
 import { UsersService } from '../../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { Payload } from '../jwt/payload';
@@ -12,15 +12,12 @@ export class RolesService {
   ) {}
 
   async selectRoleAndGenerateNewAccessToken(
-    user: User,
+    oldPayload: Payload,
     role: Role,
   ): Promise<string> {
-    await this.usersService.setRole(user.personalData.email, role);
+    await this.usersService.setRole(oldPayload.email, role);
 
-    const newPayload = Payload.fromPlain({
-      personalData: user.personalData,
-      role,
-    });
+    const newPayload = oldPayload.withRole(role);
 
     return this.jwtService.sign(JSON.stringify(newPayload));
   }

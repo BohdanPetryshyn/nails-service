@@ -7,7 +7,16 @@ import {
   IsOptional,
   IsUrl,
 } from 'class-validator';
-import instantiateAndValidate from '../../core/validation/instantiate-and-validate';
+import { validate } from '../../core/validation/validate';
+
+export interface PersonalDataConstructorParams {
+  email: string;
+  firstName: string;
+  lastName: string;
+  gender?: string;
+  locale: string;
+  pictureUrl: string;
+}
 
 @Exclude()
 @Schema()
@@ -42,7 +51,21 @@ export class PersonalData {
   @Prop({ required: true })
   pictureUrl: string;
 
-  static fromPlain(checkRequest: PersonalData) {
-    return instantiateAndValidate(PersonalData, checkRequest);
+  constructor({
+    email,
+    firstName,
+    lastName,
+    gender,
+    locale,
+    pictureUrl,
+  }: PersonalDataConstructorParams) {
+    this.email = email;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.gender = gender;
+    this.locale = locale;
+    this.pictureUrl = pictureUrl;
+
+    validate(this);
   }
 }

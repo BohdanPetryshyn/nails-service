@@ -15,7 +15,7 @@ export class GooglePersonalDataService {
       .toPromise()
       .then((response) => response.data);
 
-    return PersonalData.fromPlain({
+    return new PersonalData({
       email: fetchedUser.email,
       firstName: fetchedUser.given_name,
       lastName: fetchedUser.family_name,

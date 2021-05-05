@@ -3,11 +3,15 @@ import { Document } from 'mongoose';
 import { Exclude, Expose, Type } from 'class-transformer';
 import { PersonalData } from './personal-data';
 import { IsEnum, IsOptional, ValidateNested } from 'class-validator';
-import instantiateAndValidate from '../../core/validation/instantiate-and-validate';
+import { validate } from '../../core/validation/validate';
 
 export enum Role {
   CLIENT = 'CLIENT',
   MASTER = 'MASTER',
+}
+
+export interface UserConstructorParams {
+  personalData: PersonalData;
 }
 
 @Exclude()
@@ -25,8 +29,10 @@ export class User {
   @Prop({ enum: Role, index: true })
   role?: Role;
 
-  static fromPlain(plain: User) {
-    return instantiateAndValidate(User, plain);
+  constructor({ personalData }: UserConstructorParams) {
+    this.personalData = personalData;
+
+    validate(this);
   }
 }
 

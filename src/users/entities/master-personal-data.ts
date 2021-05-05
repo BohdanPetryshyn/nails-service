@@ -1,8 +1,14 @@
-import { PersonalData } from './personal-data';
+import { PersonalData, PersonalDataConstructorParams } from './personal-data';
 import { Exclude, Expose } from 'class-transformer';
 import { Prop, Schema } from '@nestjs/mongoose';
 import { IsNotEmpty, IsOptional } from 'class-validator';
-import instantiateAndValidate from '../../core/validation/instantiate-and-validate';
+import { validate } from '../../core/validation/validate';
+
+interface MasterPersonalDataConstructorParams
+  extends PersonalDataConstructorParams {
+  address?: string;
+  bio?: string;
+}
 
 @Exclude()
 @Schema()
@@ -19,7 +25,20 @@ export class MasterPersonalData extends PersonalData {
   @Prop()
   bio?: string;
 
-  static fromPlain(plain: MasterPersonalData) {
-    return instantiateAndValidate(MasterPersonalData, plain);
+  constructor({
+    email,
+    firstName,
+    lastName,
+    gender,
+    locale,
+    pictureUrl,
+    address,
+    bio,
+  }: MasterPersonalDataConstructorParams) {
+    super({ email, firstName, lastName, gender, locale, pictureUrl });
+    this.address = address;
+    this.bio = bio;
+
+    validate(this);
   }
 }

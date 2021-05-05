@@ -19,6 +19,11 @@ export class MastersDao {
       { new: true },
     );
 
-    return updatedMaster && Master.fromPlain(updatedMaster);
+    return (
+      updatedMaster &&
+      new Master({
+        personalData: new MasterPersonalData(updatedMaster.personalData),
+      })
+    );
   }
 }

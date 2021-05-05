@@ -1,8 +1,15 @@
-import { Exclude, Expose, Type } from 'class-transformer';
-import { PersonalData } from '../../users/entities/personal-data';
-import { IsEnum, IsOptional, ValidateNested } from 'class-validator';
+import { Exclude, Expose } from 'class-transformer';
+import { IsEmail, IsEnum, IsLocale, IsOptional } from 'class-validator';
 import { Role } from '../../users/entities/user';
-import instantiateAndValidate from '../../core/validation/instantiate-and-validate';
+import { Prop } from '@nestjs/mongoose';
+import { PersonalData } from '../../users/entities/personal-data';
+import { validate } from '../../core/validation/validate';
+
+interface PayloadConstructorParams {
+  role?: Role;
+  email: string;
+  locale: string;
+}
 
 @Exclude()
 export class Payload {
@@ -12,11 +19,28 @@ export class Payload {
   role?: Role;
 
   @Expose()
-  @ValidateNested()
-  @Type(() => PersonalData)
-  personalData: PersonalData;
+  @IsEmail()
+  @Prop({ required: true })
+  email: string;
 
-  static fromPlain(plain: Payload) {
-    return instantiateAndValidate(Payload, plain);
+  @Expose()
+  @IsLocale()
+  @Prop({ required: true })
+  locale: string;
+
+  constructor({ role, email, locale }: PayloadConstructorParams) {
+    this.role = role;
+    this.email = email;
+    this.locale = locale;
+
+    validate(this);
+  }
+
+  static fromPersonalData(personalData: PersonalData) {
+    return new Payload(personalData);
+  }
+
+  withRole(role: Role): Payload {
+    return new Payload({ ...this, role });
   }
 }

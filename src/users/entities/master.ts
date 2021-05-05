@@ -1,11 +1,15 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { Prop, Schema } from '@nestjs/mongoose';
-import { User } from './user';
+import { Role, User } from './user';
 import { ValidateNested } from 'class-validator';
 import { MasterPersonalData } from './master-personal-data';
-import instantiateAndValidate from '../../core/validation/instantiate-and-validate';
 import { Document } from 'mongoose';
 import { createSchemaDiscriminatorForClass } from '../../core/mongoose/create-schema-discriminator-for-class';
+import { validate } from '../../core/validation/validate';
+
+interface MasterConstructorParams {
+  personalData: MasterPersonalData;
+}
 
 @Exclude()
 @Schema()
@@ -16,8 +20,12 @@ export class Master extends User {
   @Prop({ required: true })
   personalData: MasterPersonalData;
 
-  static fromPlain(plain: Master) {
-    return instantiateAndValidate(Master, plain);
+  constructor({ personalData }: MasterConstructorParams) {
+    super({ personalData });
+    this.personalData = personalData;
+    this.role = Role.MASTER;
+
+    validate(this);
   }
 }
 
