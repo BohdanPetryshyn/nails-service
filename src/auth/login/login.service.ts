@@ -19,7 +19,7 @@ export class LoginService {
 
     const user = await this.usersService.getOrCreate(userPersonalData);
 
-    const payload = Payload.fromPersonalData(user.personalData);
+    const payload = Payload.fromUser(user);
 
     return this.jwtService.sign(JSON.stringify(payload));
   }

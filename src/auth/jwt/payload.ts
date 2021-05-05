@@ -1,8 +1,7 @@
 import { Exclude, Expose } from 'class-transformer';
 import { IsEmail, IsEnum, IsLocale, IsOptional } from 'class-validator';
-import { Role } from '../../users/entities/user';
+import { Role, User } from '../../users/entities/user';
 import { Prop } from '@nestjs/mongoose';
-import { PersonalData } from '../../users/entities/personal-data';
 import { validate } from '../../core/validation/validate';
 
 interface PayloadConstructorParams {
@@ -36,8 +35,12 @@ export class Payload {
     validate(this);
   }
 
-  static fromPersonalData(personalData: PersonalData) {
-    return new Payload(personalData);
+  static fromUser(user: User) {
+    return new Payload({
+      role: user.role,
+      email: user.personalData.email,
+      locale: user.personalData.locale,
+    });
   }
 
   withRole(role: Role): Payload {
