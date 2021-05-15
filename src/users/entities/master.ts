@@ -2,13 +2,12 @@ import { Exclude, Expose, Type } from 'class-transformer';
 import { Prop, Schema } from '@nestjs/mongoose';
 import { Role, User } from './user';
 import { ValidateNested } from 'class-validator';
-import { MasterPersonalData } from './master-personal-data';
-import { Document } from 'mongoose';
-import { createSchemaDiscriminatorForClass } from '../../core/mongoose/create-schema-discriminator-for-class';
-import { validate } from '../../core/validation/validate';
+import { MasterData } from './master-data';
+import { LoginData } from './login-data';
 
 interface MasterConstructorParams {
-  personalData: MasterPersonalData;
+  loginData: LoginData;
+  masterData: MasterData;
 }
 
 @Exclude()
@@ -16,19 +15,14 @@ interface MasterConstructorParams {
 export class Master extends User {
   @Expose()
   @ValidateNested()
-  @Type(() => MasterPersonalData)
+  @Type(() => MasterData)
   @Prop({ required: true })
-  personalData: MasterPersonalData;
+  masterData: MasterData;
 
-  constructor({ personalData }: MasterConstructorParams) {
-    super({ personalData });
-    this.personalData = personalData;
+  constructor({ loginData, masterData }: MasterConstructorParams) {
+    super({ loginData });
     this.role = Role.MASTER;
 
-    validate(this);
+    this.masterData = masterData;
   }
 }
-
-export type MasterDocument = Master & Document;
-
-export const MasterSchema = createSchemaDiscriminatorForClass(Master, 'role');

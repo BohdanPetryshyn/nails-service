@@ -31,15 +31,13 @@ export class Payload {
     this.role = role;
     this.email = email;
     this.locale = locale;
-
-    validate(this);
   }
 
   static fromUser(user: User) {
     return new Payload({
       role: user.role,
-      email: user.personalData.email,
-      locale: user.personalData.locale,
+      email: user.loginData.email,
+      locale: user.loginData.locale,
     });
   }
 

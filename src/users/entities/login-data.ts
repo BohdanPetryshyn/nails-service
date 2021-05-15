@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 import { validate } from '../../core/validation/validate';
 
-export interface PersonalDataConstructorParams {
+export interface LoginDataConstructorParams {
   email: string;
   firstName: string;
   lastName: string;
@@ -20,7 +20,7 @@ export interface PersonalDataConstructorParams {
 
 @Exclude()
 @Schema()
-export class PersonalData {
+export class LoginData {
   @Expose()
   @IsEmail()
   @Prop({ required: true })
@@ -58,14 +58,12 @@ export class PersonalData {
     gender,
     locale,
     pictureUrl,
-  }: PersonalDataConstructorParams) {
+  }: LoginDataConstructorParams) {
     this.email = email;
     this.firstName = firstName;
     this.lastName = lastName;
     this.gender = gender;
     this.locale = locale;
     this.pictureUrl = pictureUrl;
-
-    validate(this);
   }
 }

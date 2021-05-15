@@ -4,6 +4,7 @@ import { AuthResponse } from '../auth-response';
 import { JwtAuthGuard } from '../jwt/jwt.guard';
 import { AuthedRequest } from '../jwt/authed-request';
 import { RolesService } from './roles.service';
+import { UserData } from '../../users/entities/user-data';
 
 @Controller('role')
 export class RolesController {
@@ -12,12 +13,14 @@ export class RolesController {
   @UseGuards(JwtAuthGuard)
   @Post('select')
   async selectRole(
-    @Body('role') role: Role,
     @Req() request: AuthedRequest,
+    @Body('role') role: Role,
+    @Body('userData') userData: UserData,
   ): Promise<AuthResponse> {
     const accessToken = await this.rolesService.selectRoleAndGenerateNewAccessToken(
       request.user,
       role,
+      userData,
     );
 
     return {

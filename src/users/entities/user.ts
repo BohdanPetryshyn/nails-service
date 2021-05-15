@@ -1,9 +1,7 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Prop, Schema } from '@nestjs/mongoose';
 import { Exclude, Expose, Type } from 'class-transformer';
-import { PersonalData } from './personal-data';
+import { LoginData } from './login-data';
 import { IsEnum, IsOptional, ValidateNested } from 'class-validator';
-import { validate } from '../../core/validation/validate';
 
 export enum Role {
   CLIENT = 'CLIENT',
@@ -11,7 +9,7 @@ export enum Role {
 }
 
 export interface UserConstructorParams {
-  personalData: PersonalData;
+  loginData: LoginData;
 }
 
 @Exclude()
@@ -19,9 +17,9 @@ export interface UserConstructorParams {
 export class User {
   @Expose()
   @ValidateNested()
-  @Type(() => PersonalData)
+  @Type(() => LoginData)
   @Prop({ required: true })
-  personalData: PersonalData;
+  loginData: LoginData;
 
   @Expose()
   @IsEnum(Role)
@@ -29,13 +27,7 @@ export class User {
   @Prop({ enum: Role, index: true })
   role?: Role;
 
-  constructor({ personalData }: UserConstructorParams) {
-    this.personalData = personalData;
-
-    validate(this);
+  constructor({ loginData }: UserConstructorParams) {
+    this.loginData = loginData;
   }
 }
-
-export type UserDocument = User & Document;
-
-export const UserSchema = SchemaFactory.createForClass(User);
