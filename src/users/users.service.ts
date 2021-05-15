@@ -1,21 +1,20 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { UsersDao } from './users.dao';
-import { PersonalData } from './entities/personal-data';
-import { Role, User } from './entities/user';
+import { Role, User, UserCore } from './entities/user';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly usersDao: UsersDao) {}
 
-  getOrCreate(personalData: PersonalData): Promise<User> {
-    return this.usersDao.getOrCreate(personalData);
+  getOrCreate(user: UserCore): Promise<User> {
+    return this.usersDao.getOrCreate(user);
   }
 
-  async setRole(email: string, role: Role): Promise<void> {
-    const updatedUser = await this.usersDao.setRoleIfNotSet(email, role);
+  async setRole(userId: string, role: Role): Promise<void> {
+    const updatedUser = await this.usersDao.setRoleIfNotSet(userId, role);
 
     if (!updatedUser) {
-      throw new ConflictException(`User ${email} already has role assigned.`);
+      throw new ConflictException(`User ${userId} already has role assigned.`);
     }
   }
 }

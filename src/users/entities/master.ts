@@ -1,34 +1,87 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { Prop, Schema } from '@nestjs/mongoose';
-import { Role, User } from './user';
-import { ValidateNested } from 'class-validator';
-import { MasterPersonalData } from './master-personal-data';
-import { Document } from 'mongoose';
-import { createSchemaDiscriminatorForClass } from '../../core/mongoose/create-schema-discriminator-for-class';
-import { validate } from '../../core/validation/validate';
+import { User } from './user';
+import { IsMongoId, IsNotEmpty, ValidateNested } from 'class-validator';
+
+export interface MasterInfoConstructorParams {
+  address: string;
+}
+
+export interface MasterCoreConstructorParams
+  extends MasterInfoConstructorParams {
+  user: string;
+}
 
 interface MasterConstructorParams {
-  personalData: MasterPersonalData;
+  user: string;
+  address: string;
+  id: string;
+}
+
+interface MasterPopulatedConstructorParams {
+  address: string;
+  id: string;
+  user: User;
 }
 
 @Exclude()
 @Schema()
-export class Master extends User {
+export class MasterInfo {
   @Expose()
-  @ValidateNested()
-  @Type(() => MasterPersonalData)
+  @IsNotEmpty()
   @Prop({ required: true })
-  personalData: MasterPersonalData;
+  address: string;
 
-  constructor({ personalData }: MasterConstructorParams) {
-    super({ personalData });
-    this.personalData = personalData;
-    this.role = Role.MASTER;
-
-    validate(this);
+  constructor({ address }: MasterInfoConstructorParams) {
+    this.address = address;
   }
 }
 
-export type MasterDocument = Master & Document;
+@Exclude()
+@Schema()
+export class MasterCore extends MasterInfo {
+  @Expose()
+  @IsMongoId()
+  @Prop({
+    type: String,
+    ref: User.name,
+    required: true,
+  })
+  user: string;
 
-export const MasterSchema = createSchemaDiscriminatorForClass(Master, 'role');
+  constructor({ user, address }: MasterCoreConstructorParams) {
+    super({ address });
+    this.user = user;
+  }
+}
+
+@Exclude()
+@Schema()
+export class Master extends MasterCore {
+  @Expose()
+  @IsMongoId()
+  id: string;
+
+  constructor({ user, address, id }: MasterConstructorParams) {
+    super({ user, address });
+    this.id = id;
+  }
+}
+
+@Expose()
+export class MasterPopulated extends MasterInfo {
+  @Expose()
+  @IsMongoId()
+  id: string;
+
+  @Expose()
+  @Type(() => User)
+  @ValidateNested()
+  user: User;
+
+  constructor({ address, id, user }: MasterPopulatedConstructorParams) {
+    super({ address });
+    this.id = id;
+    this.user = user;
+  }
+}

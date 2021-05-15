@@ -1,47 +1,31 @@
-import { Role, User, UserDocument } from './entities/user';
-import { Model } from 'mongoose';
+import { Role, User, UserCore } from './entities/user';
+import { Document, Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
-import { PersonalData } from './entities/personal-data';
-import { Client } from './entities/client';
-import { Master } from './entities/master';
 
 @Injectable()
 export class UsersDao {
   constructor(
-    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    @InjectModel(User.name) private readonly userModel: Model<User & Document>,
   ) {}
 
-  async getOrCreate(personalData: PersonalData): Promise<User> {
+  async getOrCreate(user: UserCore): Promise<User> {
     const userDocument = await this.userModel
       .findOneAndUpdate(
-        { ['personalData.email']: personalData.email },
-        { $setOnInsert: { personalData } },
+        { email: user.email },
+        { $setOnInsert: user },
         { new: true, upsert: true },
       )
       .exec();
-    return UsersDao.createUser(userDocument);
+
+    return new User(userDocument);
   }
 
-  async setRoleIfNotSet(userEmail: string, role: Role): Promise<User | null> {
+  async setRoleIfNotSet(userId: string, role: Role): Promise<User | null> {
     const userDocument = await this.userModel
-      .findOneAndUpdate(
-        { ['personalData.email']: userEmail, role: null },
-        { role },
-        { new: true },
-      )
+      .findOneAndUpdate({ id: userId, role: null }, { role }, { new: true })
       .exec();
 
-    return userDocument && UsersDao.createUser(userDocument);
-  }
-
-  private static createUser(userDocument: UserDocument): User {
-    if (userDocument.role === Role.CLIENT) {
-      return new Client(userDocument);
-    }
-    if (userDocument.role === Role.MASTER) {
-      return new Master(userDocument);
-    }
-    return new User(userDocument);
+    return userDocument && new User(userDocument);
   }
 }

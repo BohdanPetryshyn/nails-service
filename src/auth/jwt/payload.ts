@@ -1,49 +1,57 @@
 import { Exclude, Expose } from 'class-transformer';
-import { IsEmail, IsEnum, IsLocale, IsOptional } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsLocale,
+  IsMongoId,
+  IsOptional,
+} from 'class-validator';
 import { Role, User } from '../../users/entities/user';
-import { Prop } from '@nestjs/mongoose';
-import { validate } from '../../core/validation/validate';
 
-interface PayloadConstructorParams {
-  role?: Role;
+export interface PayloadConstructorParams {
+  userId: string;
   email: string;
+  role?: Role;
   locale: string;
 }
 
 @Exclude()
 export class Payload {
   @Expose()
+  @IsMongoId()
+  userId: string;
+
+  @Expose()
+  @IsEmail()
+  email: string;
+
+  @Expose()
   @IsEnum(Role)
   @IsOptional()
   role?: Role;
 
   @Expose()
-  @IsEmail()
-  @Prop({ required: true })
-  email: string;
-
-  @Expose()
   @IsLocale()
-  @Prop({ required: true })
   locale: string;
 
-  constructor({ role, email, locale }: PayloadConstructorParams) {
-    this.role = role;
+  constructor({ userId, email, role, locale }: PayloadConstructorParams) {
+    this.userId = userId;
     this.email = email;
+    this.role = role;
     this.locale = locale;
-
-    validate(this);
-  }
-
-  static fromUser(user: User) {
-    return new Payload({
-      role: user.role,
-      email: user.personalData.email,
-      locale: user.personalData.locale,
-    });
   }
 
   withRole(role: Role): Payload {
-    return new Payload({ ...this, role });
+    return new Payload({
+      ...this,
+      role,
+    });
+  }
+
+  static fromUser(user: User): Payload {
+    return new Payload({
+      ...user,
+      userId: user.id,
+    });
   }
 }
