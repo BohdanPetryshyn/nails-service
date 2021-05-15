@@ -1,27 +1,34 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { Prop, Schema } from '@nestjs/mongoose';
-import { User } from './user';
+import { Role, User } from './user';
 import { ValidateNested } from 'class-validator';
-import * as mongoose from 'mongoose';
+import { ClientPersonalData } from './client-personal-data';
+import { Document } from 'mongoose';
+import { createSchemaDiscriminatorForClass } from '../../core/mongoose/create-schema-discriminator-for-class';
+import { validate } from '../../core/validation/validate';
 
-export interface ClientConstructorParams {
-  user: User;
+interface ClientConstructorParams {
+  personalData: ClientPersonalData;
 }
 
 @Exclude()
 @Schema()
-export class Client {
+export class Client extends User {
   @Expose()
-  @Type(() => User)
   @ValidateNested()
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: User.name,
-    required: true,
-  })
-  user: User;
+  @Type(() => ClientPersonalData)
+  @Prop({ required: true })
+  personalData: ClientPersonalData;
 
-  constructor({ user }: ClientConstructorParams) {
-    this.user = user;
+  constructor({ personalData }: ClientConstructorParams) {
+    super({ personalData });
+    this.personalData = personalData;
+    this.role = Role.CLIENT;
+
+    validate(this);
   }
 }
+
+export type ClientDocument = Client & Document;
+
+export const ClientSchema = createSchemaDiscriminatorForClass(Client, 'role');
