@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ClientsDao } from './clients.dao';
 import { Client } from './entities/client';
+import { ClientData } from './entities/client-data';
 
 @Injectable()
 export class ClientsService {

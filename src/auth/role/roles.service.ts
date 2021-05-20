@@ -3,6 +3,7 @@ import { Role } from '../../users/entities/user';
 import { JwtService } from '@nestjs/jwt';
 import { Payload } from '../jwt/payload';
 import { MasterData } from '../../users/entities/master-data';
+import { ClientData } from '../../users/entities/client-data';
 import { UserData } from '../../users/entities/user-data';
 import { ClientsService } from '../../users/clients.service';
 import { MastersService } from '../../users/masters.service';

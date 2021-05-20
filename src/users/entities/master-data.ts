@@ -16,8 +16,8 @@ export class MasterData extends UserData {
   @Prop()
   address?: string;
 
-  constructor({ address }: MasterDataConstructorParams) {
-    super({});
+  constructor({ address, city, bio }: MasterDataConstructorParams) {
+    super({ city, bio });
     this.address = address;
   }
 }

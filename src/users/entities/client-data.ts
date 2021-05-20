@@ -8,7 +8,7 @@ interface ClientDataConstructorParams extends UserDataConstructorParams {}
 @Exclude()
 @Schema()
 export class ClientData extends UserData {
-  constructor({}: ClientDataConstructorParams) {
-    super({});
+  constructor({ city, bio }: ClientDataConstructorParams) {
+    super({ city, bio });
   }
 }
