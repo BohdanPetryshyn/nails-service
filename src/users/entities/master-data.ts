@@ -1,10 +1,12 @@
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
 import { Prop, Schema } from '@nestjs/mongoose';
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
 import { UserData, UserDataConstructorParams } from './user-data';
+import { Service } from './service';
 
 export interface MasterDataConstructorParams extends UserDataConstructorParams {
   address: string;
+  services: Service[];
 }
 
 @Exclude()
@@ -16,8 +18,15 @@ export class MasterData extends UserData {
   @Prop()
   address?: string;
 
-  constructor({ address, city, bio }: MasterDataConstructorParams) {
+  @Expose()
+  @Type(() => Service)
+  @ValidateNested()
+  @Prop({ required: true })
+  services: Service[];
+
+  constructor({ address, services, city, bio }: MasterDataConstructorParams) {
     super({ city, bio });
     this.address = address;
+    this.services = services;
   }
 }
