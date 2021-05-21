@@ -6,6 +6,9 @@ networks:
       config:
         - subnet: "169.254.170.0/24"
           gateway: 169.254.170.1
+  default_network:
+    driver: bridge
+
 services:
   ecs-local-endpoints:
     image: amazon/amazon-ecs-local-container-endpoints
@@ -19,6 +22,13 @@ services:
       credentials_network:
         ipv4_address: "169.254.170.2"
 
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    networks:
+      - default_network
+
   app:
     build:
       context: .
@@ -26,11 +36,15 @@ services:
       - 3000:3000
     depends_on:
       - ecs-local-endpoints
+      - mongo
     networks:
       credentials_network:
         ipv4_address: "169.254.170.3"
+      default_network: {}
+
     env_file:
       - .env
     environment:
       AWS_DEFAULT_REGION: "eu-central-1"
       AWS_CONTAINER_CREDENTIALS_RELATIVE_URI: "/creds"
+      MONGO_CONNECTION_STRING: "mongodb://mongo/nails"
