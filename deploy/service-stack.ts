@@ -3,6 +3,7 @@ import {
   EcsClusterMain,
   LoadBalancerMain,
   VpcMain,
+  S3Buckets,
 } from '@bpetryshyn/nails-platform-client';
 import {
   ContainerImage,
@@ -25,6 +26,7 @@ export class ServiceStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
+    const buckets = new S3Buckets(this, 's3-buckets');
     const vpcMain = new VpcMain(this, 'vpc-main');
     const ecsClusterMain = new EcsClusterMain(this, 'ecs-cluster-main');
     const loadBalancerMain = new LoadBalancerMain(this, 'load-balancer-main');
@@ -43,6 +45,8 @@ export class ServiceStack extends Stack {
         targetGroups: [targetGroup],
       },
     );
+
+    buckets.userPhotos.grantPut(taskDefinition.taskRole);
   }
 
   private createTaskDefinition() {

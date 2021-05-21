@@ -48,5 +48,6 @@
   "security-group:account=596647861466:region=eu-central-1:securityGroupId=sg-0479e71016ba13fb8": {
     "securityGroupId": "sg-0479e71016ba13fb8",
     "allowAllOutbound": false
-  }
+  },
+  "ssm:account=596647861466:parameterName=nails-user-photos-bucket-name:region=eu-central-1": "nails-user-photos"
 }
