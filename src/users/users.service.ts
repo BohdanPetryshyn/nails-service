@@ -7,7 +7,11 @@ import { User } from './entities/user';
 export class UsersService {
   constructor(private readonly usersDao: UsersDao) {}
 
-  getOrCreate(personalData: LoginData): Promise<User> {
+  async getOrCreate(personalData: LoginData): Promise<User> {
     return this.usersDao.getOrCreate(personalData);
+  }
+
+  async getByEmail(email: string): Promise<User> {
+    return this.usersDao.getByEmail(email);
   }
 }

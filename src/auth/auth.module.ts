@@ -10,6 +10,7 @@ import { LoginController } from './login/login.controller';
 import { LoginService } from './login/login.service';
 import { RolesService } from './role/roles.service';
 import { RolesController } from './role/roles.controller';
+import { AuthService } from './auth.service';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { RolesController } from './role/roles.controller';
     RolesService,
     GooglePersonalDataService,
     JwtStrategy,
+    AuthService,
   ],
   controllers: [AuthController, LoginController, RolesController],
 })
