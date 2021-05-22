@@ -1,12 +1,12 @@
 import { Prop, Schema } from '@nestjs/mongoose';
 import { Exclude, Expose } from 'class-transformer';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString, IsUrl } from 'class-validator';
 import { City } from './city';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface UserDataConstructorParams {
   city: City;
   bio?: string;
+  profilePhoto?: string;
 }
 
 @Exclude()
@@ -22,9 +22,15 @@ export class UserData {
   @IsNotEmpty()
   @Prop()
   bio?: string;
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor({ city, bio }: UserDataConstructorParams) {
+
+  @Expose()
+  @IsUrl()
+  @Prop()
+  profilePhoto?: string;
+
+  constructor({ city, bio, profilePhoto }: UserDataConstructorParams) {
     this.city = city;
     this.bio = bio;
+    this.profilePhoto = profilePhoto;
   }
 }
