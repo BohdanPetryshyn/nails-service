@@ -21,7 +21,7 @@ export class GooglePersonalDataService {
       lastName: fetchedUser.family_name,
       gender: fetchedUser.gender,
       locale: fetchedUser.locale,
-      pictureUrl: fetchedUser.picture,
+      profilePhoto: fetchedUser.picture,
     });
   }
 

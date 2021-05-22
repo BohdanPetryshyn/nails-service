@@ -7,7 +7,6 @@ import {
   IsOptional,
   IsUrl,
 } from 'class-validator';
-import { validate } from '../../core/validation/validate';
 
 export interface LoginDataConstructorParams {
   email: string;
@@ -15,7 +14,7 @@ export interface LoginDataConstructorParams {
   lastName: string;
   gender?: string;
   locale: string;
-  pictureUrl: string;
+  profilePhoto: string;
 }
 
 @Exclude()
@@ -49,7 +48,7 @@ export class LoginData {
   @Expose()
   @IsUrl()
   @Prop({ required: true })
-  pictureUrl: string;
+  profilePhoto: string;
 
   constructor({
     email,
@@ -57,13 +56,13 @@ export class LoginData {
     lastName,
     gender,
     locale,
-    pictureUrl,
+    profilePhoto,
   }: LoginDataConstructorParams) {
     this.email = email;
     this.firstName = firstName;
     this.lastName = lastName;
     this.gender = gender;
     this.locale = locale;
-    this.pictureUrl = pictureUrl;
+    this.profilePhoto = profilePhoto;
   }
 }
