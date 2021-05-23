@@ -37,6 +37,14 @@ export class UsersDao {
     return userDocument && UsersDao.createUser(userDocument);
   }
 
+  async getLoginDataByEmail(email: string): Promise<LoginData | null> {
+    const userDocument = await this.userModel
+      .findOne({ ['loginData.email']: email }, { loginData: true })
+      .exec();
+
+    return userDocument && new LoginData(userDocument.loginData);
+  }
+
   private static createUser(userDocument: UserDocument): User {
     if (userDocument.role === Role.CLIENT) {
       return new Client(userDocument as ClientDocument);

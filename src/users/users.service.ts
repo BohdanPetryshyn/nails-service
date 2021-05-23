@@ -14,4 +14,8 @@ export class UsersService {
   async getByEmail(email: string): Promise<User | null> {
     return this.usersDao.getByEmail(email);
   }
+
+  async getLoginDataByEmail(email: string): Promise<LoginData | null> {
+    return this.usersDao.getLoginDataByEmail(email);
+  }
 }

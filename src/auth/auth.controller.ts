@@ -4,13 +4,15 @@ import { AuthedRequest } from './jwt/authed-request';
 import { Payload } from './jwt/payload';
 import { AuthService } from './auth.service';
 import { User } from '../users/entities/user';
+import { LoginData } from '../users/entities/login-data';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
   @UseGuards(JwtAuthGuard)
-  @Get('me')
-  async getMe(@Req() request: AuthedRequest): Promise<User> {
-    return this.authService.getMe(request.user.email);
+  @Get('my-login-data')
+  async getLoginData(@Req() request: AuthedRequest): Promise<LoginData> {
+    return this.authService.getMyLoginData(request.user.email);
   }
 }
