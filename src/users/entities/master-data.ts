@@ -24,8 +24,16 @@ export class MasterData extends UserData {
   @Prop({ required: true })
   services: Service[];
 
-  constructor({ address, services, city, bio }: MasterDataConstructorParams) {
-    super({ city, bio });
+  constructor({
+    address,
+    services,
+    city,
+    bio,
+    profilePhoto,
+    firstName,
+    lastName,
+  }: MasterDataConstructorParams) {
+    super({ city, bio, profilePhoto, firstName, lastName });
     this.address = address;
     this.services = services;
   }

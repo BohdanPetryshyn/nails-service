@@ -11,7 +11,7 @@ export class UsersService {
     return this.usersDao.getOrCreate(personalData);
   }
 
-  async getByEmail(email: string): Promise<User> {
+  async getByEmail(email: string): Promise<User | null> {
     return this.usersDao.getByEmail(email);
   }
 }

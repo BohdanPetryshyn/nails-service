@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user';
 
@@ -7,6 +7,11 @@ export class AuthService {
   constructor(private readonly usersService: UsersService) {}
 
   async getMe(email: string): Promise<User> {
-    return this.usersService.getByEmail(email);
+    const user = await this.usersService.getByEmail(email);
+
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found.`);
+    }
+    return user;
   }
 }
