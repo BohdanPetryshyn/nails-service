@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsUrl,
 } from 'class-validator';
+import instantiateAndValidate from '../../core/validation/instantiateAndValidate';
 
 export interface LoginDataConstructorParams {
   email: string;
@@ -50,19 +51,7 @@ export class LoginData {
   @Prop({ required: true })
   profilePhoto: string;
 
-  constructor({
-    email,
-    firstName,
-    lastName,
-    gender,
-    locale,
-    profilePhoto,
-  }: LoginDataConstructorParams) {
-    this.email = email;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.gender = gender;
-    this.locale = locale;
-    this.profilePhoto = profilePhoto;
+  static fromPlain(plain: LoginDataConstructorParams) {
+    return instantiateAndValidate(LoginData, plain);
   }
 }

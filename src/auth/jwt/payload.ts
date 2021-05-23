@@ -2,7 +2,7 @@ import { Exclude, Expose } from 'class-transformer';
 import { IsEmail, IsEnum, IsLocale, IsOptional } from 'class-validator';
 import { Role, User } from '../../users/entities/user';
 import { Prop } from '@nestjs/mongoose';
-import { validate } from '../../core/validation/validate';
+import instantiateAndValidate from '../../core/validation/instantiateAndValidate';
 
 interface PayloadConstructorParams {
   role?: Role;
@@ -27,14 +27,12 @@ export class Payload {
   @Prop({ required: true })
   locale: string;
 
-  constructor({ role, email, locale }: PayloadConstructorParams) {
-    this.role = role;
-    this.email = email;
-    this.locale = locale;
+  static fromPlain(plain: PayloadConstructorParams) {
+    return instantiateAndValidate(Payload, plain);
   }
 
   static fromUser(user: User) {
-    return new Payload({
+    return Payload.fromPlain({
       role: user.role,
       email: user.loginData.email,
       locale: user.loginData.locale,
@@ -42,6 +40,6 @@ export class Payload {
   }
 
   withRole(role: Role): Payload {
-    return new Payload({ ...this, role });
+    return Payload.fromPlain({ ...this, role });
   }
 }

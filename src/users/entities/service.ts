@@ -2,6 +2,7 @@ import { Exclude, Expose } from 'class-transformer';
 import { IsEnum, IsInt } from 'class-validator';
 import { ServiceType } from './service-type';
 import { Prop, Schema } from '@nestjs/mongoose';
+import instantiateAndValidate from '../../core/validation/instantiateAndValidate';
 
 interface ServiceConstructorParams {
   serviceType: ServiceType;
@@ -27,9 +28,7 @@ export class Service {
   @Prop({ required: true })
   duration: number;
 
-  constructor({ serviceType, price, duration }: ServiceConstructorParams) {
-    this.serviceType = serviceType;
-    this.price = price;
-    this.duration = duration;
+  static fromPlain(plain: ServiceConstructorParams) {
+    return instantiateAndValidate(Service, plain);
   }
 }

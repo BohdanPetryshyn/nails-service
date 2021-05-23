@@ -4,6 +4,7 @@ import { IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
 import { UserData, UserDataConstructorParams } from './user-data';
 import { Service } from './service';
 import { WorkingHours } from './working-hours';
+import instantiateAndValidate from '../../core/validation/instantiateAndValidate';
 
 export interface MasterDataConstructorParams extends UserDataConstructorParams {
   address: string;
@@ -32,19 +33,7 @@ export class MasterData extends UserData {
   @Prop({ required: true })
   workingHours: WorkingHours[];
 
-  constructor({
-    address,
-    services,
-    city,
-    bio,
-    profilePhoto,
-    firstName,
-    lastName,
-    workingHours,
-  }: MasterDataConstructorParams) {
-    super({ city, bio, profilePhoto, firstName, lastName });
-    this.address = address;
-    this.services = services;
-    this.workingHours = workingHours;
+  static fromPlain(plain: MasterDataConstructorParams) {
+    return instantiateAndValidate(MasterData, plain);
   }
 }

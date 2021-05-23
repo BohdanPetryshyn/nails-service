@@ -4,6 +4,7 @@ import { Role, User } from './user';
 import { ValidateNested } from 'class-validator';
 import { MasterData } from './master-data';
 import { LoginData } from './login-data';
+import instantiateAndValidate from '../../core/validation/instantiateAndValidate';
 
 interface MasterConstructorParams {
   loginData: LoginData;
@@ -19,10 +20,7 @@ export class Master extends User {
   @Prop({ required: true })
   masterData: MasterData;
 
-  constructor({ loginData, masterData }: MasterConstructorParams) {
-    super({ loginData });
-    this.role = Role.MASTER;
-
-    this.masterData = masterData;
+  static fromPlain(plain: MasterConstructorParams) {
+    return instantiateAndValidate(Master, plain);
   }
 }

@@ -27,7 +27,7 @@ export class MastersDao {
       )
       .exec();
 
-    return masterDocument && new Master(masterDocument);
+    return masterDocument && Master.fromPlain(masterDocument);
   }
 
   async addWorkingHours(

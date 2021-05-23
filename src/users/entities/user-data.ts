@@ -1,7 +1,14 @@
 import { Prop, Schema } from '@nestjs/mongoose';
 import { Exclude, Expose } from 'class-transformer';
-import { IsEnum, IsNotEmpty, IsString, IsUrl } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUrl,
+} from 'class-validator';
 import { City } from './city';
+import instantiateAndValidate from '../../core/validation/instantiateAndValidate';
 
 export interface UserDataConstructorParams {
   city: City;
@@ -22,6 +29,7 @@ export class UserData {
   @Expose()
   @IsString()
   @IsNotEmpty()
+  @IsOptional()
   @Prop()
   bio?: string;
 
@@ -42,17 +50,7 @@ export class UserData {
   @Prop({ required: true })
   lastName: string;
 
-  constructor({
-    city,
-    bio,
-    profilePhoto,
-    firstName,
-    lastName,
-  }: UserDataConstructorParams) {
-    this.city = city;
-    this.bio = bio;
-    this.profilePhoto = profilePhoto;
-    this.firstName = firstName;
-    this.lastName = lastName;
+  static fromPlain(plain: UserDataConstructorParams) {
+    return instantiateAndValidate(UserData, plain);
   }
 }

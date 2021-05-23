@@ -26,6 +26,6 @@ export class ClientsDao {
       )
       .exec();
 
-    return clientDocument && new Client(clientDocument);
+    return clientDocument && Client.fromPlain(clientDocument);
   }
 }

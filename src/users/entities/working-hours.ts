@@ -1,17 +1,27 @@
 import { Prop, Schema } from '@nestjs/mongoose';
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
 import { IsInt } from 'class-validator';
+import instantiateAndValidate from '../../core/validation/instantiateAndValidate';
+
+interface WorkingHoursConstructorParams {
+  from: Date;
+  to: Date;
+}
 
 @Exclude()
 @Schema()
 export class WorkingHours {
   @Expose()
-  @IsInt()
+  @Type(() => Date)
   @Prop({ required: true, index: true })
-  from: number;
+  from: Date;
 
   @Expose()
-  @IsInt()
+  @Type(() => Date)
   @Prop({ required: true, index: true })
-  to: number;
+  to: Date;
+
+  static fromPlain(plain: WorkingHoursConstructorParams) {
+    return instantiateAndValidate(WorkingHours, plain);
+  }
 }

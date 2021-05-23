@@ -2,6 +2,7 @@ import { Prop, Schema } from '@nestjs/mongoose';
 import { Exclude, Expose, Type } from 'class-transformer';
 import { LoginData } from './login-data';
 import { IsEnum, IsOptional, ValidateNested } from 'class-validator';
+import instantiateAndValidate from '../../core/validation/instantiateAndValidate';
 
 export enum Role {
   CLIENT = 'CLIENT',
@@ -27,7 +28,7 @@ export class User {
   @Prop({ enum: Role, index: true })
   role?: Role;
 
-  constructor({ loginData }: UserConstructorParams) {
-    this.loginData = loginData;
+  static fromPlain(plain: UserConstructorParams) {
+    return instantiateAndValidate(User, plain);
   }
 }

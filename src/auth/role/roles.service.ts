@@ -1,10 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Role } from '../../users/entities/user';
 import { JwtService } from '@nestjs/jwt';
 import { Payload } from '../jwt/payload';
 import { MasterData } from '../../users/entities/master-data';
 import { ClientData } from '../../users/entities/client-data';
-import { UserData } from '../../users/entities/user-data';
 import { ClientsService } from '../../users/clients.service';
 import { MastersService } from '../../users/masters.service';
 
@@ -16,34 +15,26 @@ export class RolesService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async selectRoleAndGenerateNewAccessToken(
+  async selectClientRoleAndGenerateNewAccessToken(
     oldPayload: Payload,
-    role: Role,
-    userData: UserData,
+    clientData: ClientData,
   ): Promise<string> {
-    await this.setUserRoleAndData(oldPayload.email, role, userData);
+    await this.clientsService.makeClient(oldPayload.email, clientData);
 
-    const newPayload = oldPayload.withRole(role);
-
-    return this.jwtService.sign(JSON.stringify(newPayload));
+    return this.getNewPayloadWithRole(oldPayload, Role.CLIENT);
   }
 
-  private async setUserRoleAndData(
-    email: string,
-    role: Role,
-    userData: UserData,
-  ): Promise<void> {
-    switch (role) {
-      case Role.CLIENT:
-        await this.clientsService.makeClient(email, userData as ClientData);
-        break;
-      case Role.MASTER:
-        await this.mastersService.makeMaster(email, userData as MasterData);
-        break;
-      default:
-        throw new BadRequestException(
-          `Can't set role ${role} to user ${email}`,
-        );
-    }
+  async selectMasterRoleAndGenerateNewAccessToken(
+    oldPayload: Payload,
+    masterData: MasterData,
+  ): Promise<string> {
+    await this.mastersService.makeMaster(oldPayload.email, masterData);
+
+    return this.getNewPayloadWithRole(oldPayload, Role.MASTER);
+  }
+
+  private getNewPayloadWithRole(oldPayload: Payload, role: Role): string {
+    const newPayload = oldPayload.withRole(role);
+    return this.jwtService.sign(JSON.stringify(newPayload));
   }
 }

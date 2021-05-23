@@ -42,16 +42,16 @@ export class UsersDao {
       .findOne({ ['loginData.email']: email }, { loginData: true })
       .exec();
 
-    return userDocument && new LoginData(userDocument.loginData);
+    return userDocument && LoginData.fromPlain(userDocument.loginData);
   }
 
   private static createUser(userDocument: UserDocument): User {
     if (userDocument.role === Role.CLIENT) {
-      return new Client(userDocument as ClientDocument);
+      return Client.fromPlain(userDocument as ClientDocument);
     }
     if (userDocument.role === Role.MASTER) {
-      return new Master(userDocument as MasterDocument);
+      return Master.fromPlain(userDocument as MasterDocument);
     }
-    return new User(userDocument);
+    return User.fromPlain(userDocument);
   }
 }
