@@ -3,10 +3,12 @@ import { Prop, Schema } from '@nestjs/mongoose';
 import { IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
 import { UserData, UserDataConstructorParams } from './user-data';
 import { Service } from './service';
+import { WorkingHours } from './working-hours';
 
 export interface MasterDataConstructorParams extends UserDataConstructorParams {
   address: string;
   services: Service[];
+  workingHours: WorkingHours[];
 }
 
 @Exclude()
@@ -24,6 +26,12 @@ export class MasterData extends UserData {
   @Prop({ required: true })
   services: Service[];
 
+  @Expose()
+  @Type(() => WorkingHours)
+  @ValidateNested()
+  @Prop({ required: true })
+  workingHours: WorkingHours[];
+
   constructor({
     address,
     services,
@@ -32,9 +40,11 @@ export class MasterData extends UserData {
     profilePhoto,
     firstName,
     lastName,
+    workingHours,
   }: MasterDataConstructorParams) {
     super({ city, bio, profilePhoto, firstName, lastName });
     this.address = address;
     this.services = services;
+    this.workingHours = workingHours;
   }
 }

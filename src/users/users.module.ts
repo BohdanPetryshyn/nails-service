@@ -11,6 +11,7 @@ import { MastersService } from './masters.service';
 import { ClientsDao } from './clients.dao';
 import { ClientsService } from './clients.service';
 import { createSchemaDiscriminatorForClass } from '../core/mongoose/create-schema-discriminator-for-class';
+import { MastersController } from './masters.controller';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { createSchemaDiscriminatorForClass } from '../core/mongoose/create-schem
     MastersService,
     ClientsService,
   ],
+  controllers: [MastersController],
   exports: [UsersService, MastersService, ClientsService],
 })
 export class UsersModule {}
