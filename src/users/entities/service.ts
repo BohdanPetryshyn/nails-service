@@ -6,6 +6,7 @@ import { Prop, Schema } from '@nestjs/mongoose';
 interface ServiceConstructorParams {
   serviceType: ServiceType;
   price: number;
+  duration: number;
 }
 
 @Exclude()
@@ -21,8 +22,14 @@ export class Service {
   @Prop({ required: true })
   price: number;
 
-  constructor({ serviceType, price }: ServiceConstructorParams) {
+  @Expose()
+  @IsInt()
+  @Prop({ required: true })
+  duration: number;
+
+  constructor({ serviceType, price, duration }: ServiceConstructorParams) {
     this.serviceType = serviceType;
     this.price = price;
+    this.duration = duration;
   }
 }
