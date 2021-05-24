@@ -30,7 +30,7 @@ export class MasterData extends UserData {
   @Expose()
   @Type(() => WorkingHours)
   @ValidateNested()
-  @Prop({ required: true })
+  @Prop({ default: [] })
   workingHours: WorkingHours[];
 
   static fromPlain(plain: MasterDataConstructorParams) {
