@@ -8,6 +8,10 @@ import { WorkingHours } from './entities/working-hours';
 export class MastersService {
   constructor(private readonly mastersDao: MastersDao) {}
 
+  async getByEmail(email: string): Promise<Master | null> {
+    return this.mastersDao.getByEmail(email);
+  }
+
   async makeMaster(email: string, masterData: MasterData): Promise<Master> {
     const master = this.mastersDao.makeMaster(email, masterData);
 

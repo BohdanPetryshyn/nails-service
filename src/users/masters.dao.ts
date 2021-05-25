@@ -15,6 +15,16 @@ export class MastersDao {
     private readonly masterModel: Model<MasterDocument>,
   ) {}
 
+  async getByEmail(email: string): Promise<Master | null> {
+    const masterDocument = await this.masterModel
+      .findOne({
+        ['loginData.email']: email,
+      })
+      .exec();
+
+    return masterDocument && Master.fromPlain(masterDocument);
+  }
+
   async makeMaster(
     email: string,
     masterData: MasterData,

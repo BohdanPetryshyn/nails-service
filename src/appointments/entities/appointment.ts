@@ -4,18 +4,19 @@ import { Prop, Schema } from '@nestjs/mongoose';
 import { Service } from '../../users/entities/service';
 import instantiateAndValidate from '../../core/validation/instantiateAndValidate';
 
-interface AppointmentCoreConstructorParams {
+export interface AppointmentCoreConstructorParams {
   masterEmail: string;
   clientEmail: string;
   from: Date;
 }
 
-interface AppointmentEggConstructorParams
+export interface AppointmentEggConstructorParams
   extends AppointmentCoreConstructorParams {
   services: Service[];
 }
 
-interface AppointmentConstructorParams extends AppointmentEggConstructorParams {
+export interface AppointmentConstructorParams
+  extends AppointmentEggConstructorParams {
   id: string;
 }
 

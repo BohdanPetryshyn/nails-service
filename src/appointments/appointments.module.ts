@@ -5,6 +5,7 @@ import { MongoModule } from '../mongo/mongo.module';
 import { MongooseModule, SchemaFactory } from '@nestjs/mongoose';
 import { Appointment } from './entities/appointment';
 import { AppointmentsDao } from './appointments.dao';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AppointmentsDao } from './appointments.dao';
         schema: SchemaFactory.createForClass(Appointment),
       },
     ]),
+    UsersModule,
   ],
   providers: [AppointmentsService, AppointmentsDao],
   controllers: [AppointmentsController],
