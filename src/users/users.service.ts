@@ -18,4 +18,8 @@ export class UsersService {
   async getLoginDataByEmail(email: string): Promise<LoginData | null> {
     return this.usersDao.getLoginDataByEmail(email);
   }
+
+  async getFullNameByEmails(emails: string[]): Promise<Map<string, string>> {
+    return this.usersDao.getFullNameByEmails(emails);
+  }
 }

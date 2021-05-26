@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import { City } from './city';
 import instantiateAndValidate from '../../core/validation/instantiateAndValidate';
+import { LoginData } from './login-data';
 
 export interface UserDataConstructorParams {
   city: City;
@@ -52,5 +53,13 @@ export class UserData {
 
   static fromPlain(plain: UserDataConstructorParams) {
     return instantiateAndValidate(UserData, plain);
+  }
+
+  get fullName() {
+    return UserData.getFullName(this);
+  }
+
+  static getFullName(userData: { firstName: string; lastName: string }) {
+    return `${userData.firstName} ${userData.lastName}`;
   }
 }

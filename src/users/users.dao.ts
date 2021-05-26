@@ -7,6 +7,8 @@ import { Client } from './entities/client';
 import { Master } from './entities/master';
 import { MasterDocument } from './masters.dao';
 import { ClientDocument } from './clients.dao';
+import { ClientData } from './entities/client-data';
+import { UserData } from './entities/user-data';
 
 type StrictUserDocument = User & Document;
 
@@ -45,13 +47,43 @@ export class UsersDao {
     return userDocument && LoginData.fromPlain(userDocument.loginData);
   }
 
+  async getFullNameByEmails(emails: string[]): Promise<Map<string, string>> {
+    const userDocuments = await this.userModel.find(
+      { ['loginData.email']: { $in: emails } },
+      {
+        ['loginData.email']: true,
+        ['clientData.firstName']: true,
+        ['clientData.lastName']: true,
+        ['masterData.firstName']: true,
+        ['masterData.lastName']: true,
+      },
+    );
+
+    return new Map(
+      userDocuments.map((document) => [
+        document.loginData.email,
+        UsersDao.getFullName(document),
+      ]),
+    );
+  }
+
   private static createUser(userDocument: UserDocument): User {
-    if (userDocument.role === Role.CLIENT) {
-      return Client.fromPlain(userDocument as ClientDocument);
+    if (Client.isClient(userDocument)) {
+      return Client.fromPlain(userDocument);
     }
-    if (userDocument.role === Role.MASTER) {
-      return Master.fromPlain(userDocument as MasterDocument);
+    if (Master.isMaster(userDocument)) {
+      return Master.fromPlain(userDocument);
     }
     return User.fromPlain(userDocument);
+  }
+
+  private static getFullName(userDocument: UserDocument): string {
+    if (Client.isClient(userDocument)) {
+      return UserData.getFullName(userDocument.clientData);
+    }
+    if (Master.isMaster(userDocument)) {
+      return UserData.getFullName(userDocument.masterData);
+    }
+    return UserData.getFullName(userDocument.loginData);
   }
 }

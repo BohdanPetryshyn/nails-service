@@ -1,6 +1,6 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { Prop, Schema } from '@nestjs/mongoose';
-import { User } from './user';
+import { Role, User } from './user';
 import { ValidateNested } from 'class-validator';
 import { ClientData } from './client-data';
 import { LoginData } from './login-data';
@@ -22,5 +22,9 @@ export class Client extends User {
 
   static fromPlain(plain: ClientConstructorParams) {
     return instantiateAndValidate(Client, plain);
+  }
+
+  static isClient(user: User): user is Client {
+    return user.role === Role.CLIENT;
   }
 }

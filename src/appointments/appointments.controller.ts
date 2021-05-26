@@ -12,6 +12,7 @@ import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 import { AppointmentCreateRequest } from './entities/appointment-create-request';
 import { Appointment } from './entities/appointment';
 import { AuthedRequest } from '../auth/jwt/authed-request';
+import { AppointmentView } from './entities/appointment-view';
 
 @Controller('appointments')
 export class AppointmentsController {
@@ -22,7 +23,7 @@ export class AppointmentsController {
   async create(
     @Req() request: AuthedRequest,
     @Body() createRequest: AppointmentCreateRequest,
-  ): Promise<Appointment> {
+  ): Promise<AppointmentView> {
     const userEmail = request.user.email;
     const masterEmail = createRequest.masterEmail;
     if (masterEmail != userEmail) {
@@ -37,7 +38,7 @@ export class AppointmentsController {
   @Get('master')
   async getAllMasterAppointments(
     @Req() request: AuthedRequest,
-  ): Promise<Appointment[]> {
+  ): Promise<AppointmentView[]> {
     return this.appointmentsService.getByMasterEmail(request.user.email);
   }
 }

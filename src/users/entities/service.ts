@@ -31,4 +31,15 @@ export class Service {
   static fromPlain(plain: ServiceConstructorParams) {
     return instantiateAndValidate(Service, plain);
   }
+
+  static totalPrice(services: Service[]): number {
+    return services.reduce((price, service) => price + service.price, 0);
+  }
+
+  static totalDuration(services: Service[]): number {
+    return services.reduce(
+      (duration, service) => duration + service.duration,
+      0,
+    );
+  }
 }

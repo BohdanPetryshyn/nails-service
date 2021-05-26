@@ -23,4 +23,8 @@ export class Master extends User {
   static fromPlain(plain: MasterConstructorParams) {
     return instantiateAndValidate(Master, plain);
   }
+
+  static isMaster(user: User): user is Master {
+    return user.role === Role.MASTER;
+  }
 }
