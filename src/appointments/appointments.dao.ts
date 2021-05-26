@@ -16,11 +16,34 @@ export class AppointmentsDao {
     return Appointment.fromPlain(appointmentDocument);
   }
 
-  async getByMasterEmail(masterEmail: string): Promise<Appointment[]> {
-    const appointmentDocuments = await this.appointmentModel.find({
+  async getByMasterEmail(
+    masterEmail: string,
+    from?: Date,
+    to?: Date,
+  ): Promise<Appointment[]> {
+    const query = {
       masterEmail,
-    });
+    };
+    if (from || to) {
+      query['from'] = AppointmentsDao.getDateRangeQuery(from, to);
+    }
+
+    const appointmentDocuments = await this.appointmentModel.find(query);
 
     return appointmentDocuments.map(Appointment.fromPlain);
+  }
+
+  private static getDateRangeQuery(from: Date, to: Date) {
+    const query = {};
+
+    if (from) {
+      query['$gte'] = from;
+    }
+
+    if (to) {
+      query['$lte'] = to;
+    }
+
+    return query;
   }
 }

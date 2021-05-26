@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Query,
   Req,
   UnauthorizedException,
   UseGuards,
@@ -10,9 +11,9 @@ import {
 import { AppointmentsService } from './appointments.service';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 import { AppointmentCreateRequest } from './entities/appointment-create-request';
-import { Appointment } from './entities/appointment';
 import { AuthedRequest } from '../auth/jwt/authed-request';
 import { AppointmentView } from './entities/appointment-view';
+import { ParseDatePipe } from '../core/validation/pipes/parse-date.pipe';
 
 @Controller('appointments')
 export class AppointmentsController {
@@ -38,7 +39,13 @@ export class AppointmentsController {
   @Get('master')
   async getAllMasterAppointments(
     @Req() request: AuthedRequest,
+    @Query('from', new ParseDatePipe({ isOptional: true })) from: Date,
+    @Query('to', new ParseDatePipe({ isOptional: true })) to: Date,
   ): Promise<AppointmentView[]> {
-    return this.appointmentsService.getByMasterEmail(request.user.email);
+    return this.appointmentsService.getByMasterEmail(
+      request.user.email,
+      from,
+      to,
+    );
   }
 }

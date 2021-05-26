@@ -14,9 +14,15 @@ export class AppointmentsService {
     private readonly usersService: UsersService,
   ) {}
 
-  async getByMasterEmail(masterEmail: string): Promise<AppointmentView[]> {
+  async getByMasterEmail(
+    masterEmail: string,
+    from?: Date,
+    to?: Date,
+  ): Promise<AppointmentView[]> {
     const appointments = await this.appointmentsDao.getByMasterEmail(
       masterEmail,
+      from,
+      to,
     );
     const clientFullNames = await this.getClientFullNames(appointments);
 
