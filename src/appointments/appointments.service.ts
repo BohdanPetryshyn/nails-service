@@ -24,14 +24,20 @@ export class AppointmentsService {
       from,
       to,
     );
-    const clientFullNames = await this.getClientFullNames(appointments);
+    return this.toAppointmentViews(appointments);
+  }
 
-    return appointments.map((appointment) =>
-      AppointmentView.fromAppointment(
-        appointment,
-        clientFullNames.get(appointment.clientEmail),
-      ),
+  async getByClientEmail(
+    clientEmail: string,
+    from?: Date,
+    to?: Date,
+  ): Promise<AppointmentView[]> {
+    const appointments = await this.appointmentsDao.getByClientEmail(
+      clientEmail,
+      from,
+      to,
     );
+    return this.toAppointmentViews(appointments);
   }
 
   async create(
@@ -62,30 +68,48 @@ export class AppointmentsService {
     });
   }
 
+  private async toAppointmentViews(
+    appointments: Appointment[],
+  ): Promise<AppointmentView[]> {
+    const userFullNames = await this.getUserFullNames(appointments);
+
+    return appointments.map((appointment) =>
+      AppointmentView.fromAppointment(
+        appointment,
+        userFullNames.get(appointment.clientEmail),
+        userFullNames.get(appointment.masterEmail),
+      ),
+    );
+  }
+
   private async toAppointmentView(
     appointment: Appointment,
   ): Promise<AppointmentView> {
-    const clientFullName = await this.getClientFullName(
-      appointment.clientEmail,
-    );
+    const clientFullName = await this.getUserFullName(appointment.clientEmail);
+    const masterFullName = await this.getUserFullName(appointment.masterEmail);
 
-    return AppointmentView.fromAppointment(appointment, clientFullName);
+    return AppointmentView.fromAppointment(
+      appointment,
+      clientFullName,
+      masterFullName,
+    );
   }
 
-  private async getClientFullNames(
+  private async getUserFullNames(
     appointments: Appointment[],
   ): Promise<Map<string, string>> {
-    const clientEmails = appointments.map(
-      (appointment) => appointment.clientEmail,
-    );
-    return this.usersService.getFullNameByEmails(clientEmails);
+    const userEmails = appointments.flatMap((appointment) => [
+      appointment.masterEmail,
+      appointment.clientEmail,
+    ]);
+    return this.usersService.getFullNameByEmails(userEmails);
   }
 
-  private async getClientFullName(clientEmail: string): Promise<string> {
-    const clientFullNames = await this.usersService.getFullNameByEmails([
-      clientEmail,
+  private async getUserFullName(userEmail: string): Promise<string> {
+    const userFullNames = await this.usersService.getFullNameByEmails([
+      userEmail,
     ]);
-    return clientFullNames.get(clientEmail);
+    return userFullNames.get(userEmail);
   }
 
   private async createInternal(

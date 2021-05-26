@@ -33,6 +33,23 @@ export class AppointmentsDao {
     return appointmentDocuments.map(Appointment.fromPlain);
   }
 
+  async getByClientEmail(
+    clientEmail: string,
+    from?: Date,
+    to?: Date,
+  ): Promise<Appointment[]> {
+    const query = {
+      clientEmail,
+    };
+    if (from || to) {
+      query['from'] = AppointmentsDao.getDateRangeQuery(from, to);
+    }
+
+    const appointmentDocuments = await this.appointmentModel.find(query);
+
+    return appointmentDocuments.map(Appointment.fromPlain);
+  }
+
   private static getDateRangeQuery(from: Date, to: Date) {
     const query = {};
 

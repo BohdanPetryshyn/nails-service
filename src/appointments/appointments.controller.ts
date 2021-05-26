@@ -39,10 +39,24 @@ export class AppointmentsController {
   @Get('master')
   async getAllMasterAppointments(
     @Req() request: AuthedRequest,
-    @Query('from', new ParseDatePipe({ isOptional: true })) from: Date,
-    @Query('to', new ParseDatePipe({ isOptional: true })) to: Date,
+    @Query('from', new ParseDatePipe({ isOptional: true })) from?: Date,
+    @Query('to', new ParseDatePipe({ isOptional: true })) to?: Date,
   ): Promise<AppointmentView[]> {
     return this.appointmentsService.getByMasterEmail(
+      request.user.email,
+      from,
+      to,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('client')
+  async getAllClientAppointments(
+    @Req() request: AuthedRequest,
+    @Query('from', new ParseDatePipe({ isOptional: true })) from?: Date,
+    @Query('to', new ParseDatePipe({ isOptional: true })) to?: Date,
+  ): Promise<AppointmentView[]> {
+    return this.appointmentsService.getByClientEmail(
       request.user.email,
       from,
       to,
