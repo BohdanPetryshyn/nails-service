@@ -5,6 +5,8 @@ import { Master } from './entities/master';
 import { Document, Model } from 'mongoose';
 import { MasterData } from './entities/master-data';
 import { WorkingHours } from './entities/working-hours';
+import { ServiceType } from './entities/service-type';
+import { City } from './entities/city';
 
 export type MasterDocument = Master & Document;
 
@@ -23,6 +25,24 @@ export class MastersDao {
       .exec();
 
     return masterDocument && Master.fromPlain(masterDocument);
+  }
+
+  async search(services: ServiceType[], city: City): Promise<Master[]> {
+    const fullCoincidence = await this.masterModel.find({
+      ['masterData.city']: city,
+      ['masterData.services.serviceType']: { $all: services },
+    });
+    const fullCoincidenceEmails = fullCoincidence.map(
+      (doc) => doc.loginData.email,
+    );
+
+    const partialCoincidence = await this.masterModel.find({
+      ['masterData.city']: city,
+      ['loginData.email']: { $nin: fullCoincidenceEmails },
+      ['masterData.services.serviceType']: { $in: services },
+    });
+
+    return fullCoincidence.concat(partialCoincidence).map(Master.fromPlain);
   }
 
   async makeMaster(
