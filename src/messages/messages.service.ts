@@ -1,24 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { MessagesDao } from './messages.dao';
 import { Message } from './entities/message';
-import { PushTokensService } from './push-tokens-service';
-import { NotificationsService } from './notifications.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class MessagesService {
   constructor(
     private readonly messagesDao: MessagesDao,
-    private readonly pushTokensService: PushTokensService,
     private readonly notificationsService: NotificationsService,
   ) {}
 
   async send(message: Message): Promise<void> {
     const toUserEmail = message.toEmail;
-    const toUserPushToken = await this.pushTokensService.get(toUserEmail);
 
     await Promise.all([
       this.messagesDao.create(message),
-      this.notificationsService.send(message.toPlain(), toUserPushToken),
+      this.notificationsService.send(message.toPlain(), toUserEmail),
     ]);
   }
 

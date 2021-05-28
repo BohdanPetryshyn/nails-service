@@ -4,8 +4,9 @@ import { CoreModule } from './core/core.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { AppointmentsModule } from './appointments/appointments.module';
 import { MessagesModule } from './messages/messages.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
-  imports: [AuthModule, CoreModule, UploadsModule, AppointmentsModule, MessagesModule],
+  imports: [AuthModule, CoreModule, UploadsModule, AppointmentsModule, MessagesModule, NotificationsModule],
 })
 export class AppModule {}

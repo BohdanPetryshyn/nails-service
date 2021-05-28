@@ -15,7 +15,7 @@ export interface MessageConstructorParams
 
 @Exclude()
 @Schema()
-export class Message {
+export class Message extends MessageSendRequest {
   @Expose()
   @IsEmail()
   @Prop({ required: true })
