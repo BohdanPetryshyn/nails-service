@@ -7,6 +7,7 @@ import { MessagesDao } from './messages.dao';
 import { PushTokensDao } from './push-tokens.dao';
 import { MessagesService } from './messages.service';
 import { PushTokensService } from './push-tokens-service';
+import { NotificationsService } from './notifications.service';
 
 @Module({
   imports: [
@@ -19,6 +20,12 @@ import { PushTokensService } from './push-tokens-service';
       },
     ]),
   ],
-  providers: [MessagesDao, PushTokensDao, MessagesService, PushTokensService],
+  providers: [
+    MessagesDao,
+    PushTokensDao,
+    MessagesService,
+    PushTokensService,
+    NotificationsService,
+  ],
 })
 export class MessagesModule {}
