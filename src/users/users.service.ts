@@ -21,12 +21,18 @@ export class UsersService {
   async getUserDataByEmail(email: string): Promise<UserData | null> {
     const user = await this.usersDao.getByEmail(email);
 
-    if (Master.isMaster(user)) {
-      return user.masterData;
-    }
-    if (Client.isClient(user)) {
-      return user.clientData;
-    }
+    return UsersService.toUserData(user);
+  }
+
+  async getUserDataByEmails(emails: string[]): Promise<Map<string, UserData>> {
+    const users = await this.usersDao.getByEmails(emails);
+
+    return new Map(
+      users.map((user) => [
+        user.loginData.email,
+        UsersService.toUserData(user),
+      ]),
+    );
   }
 
   async getLoginDataByEmail(email: string): Promise<LoginData | null> {
@@ -35,5 +41,14 @@ export class UsersService {
 
   async getFullNameByEmails(emails: string[]): Promise<Map<string, string>> {
     return this.usersDao.getFullNameByEmails(emails);
+  }
+
+  static toUserData(user: User): UserData {
+    if (Master.isMaster(user)) {
+      return user.masterData;
+    }
+    if (Client.isClient(user)) {
+      return user.clientData;
+    }
   }
 }

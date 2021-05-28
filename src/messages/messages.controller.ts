@@ -18,7 +18,7 @@ export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Get('dialog/:email')
+  @Get('chats/:email')
   async getDialogWith(
     @Req() request: AuthedRequest,
     @Param('email') withEmail: string,
@@ -28,7 +28,7 @@ export class MessagesController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('dialog/:email')
+  @Post('chats/:email')
   async send(
     @Req() request: AuthedRequest,
     @Param('email') withEmail: string,
@@ -37,5 +37,11 @@ export class MessagesController {
     const ownEmail = request.user.email;
     const message = Message.fromSendRequest(sendRequest, ownEmail);
     await this.messagesService.send(message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('chats')
+  async getChatPreviews(@Req() request: AuthedRequest) {
+    return this.messagesService.getChatPreviews(request.user.email);
   }
 }

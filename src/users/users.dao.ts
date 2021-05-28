@@ -1,4 +1,4 @@
-import { Role, User } from './entities/user';
+import { User } from './entities/user';
 import { Document, Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
@@ -7,7 +7,6 @@ import { Client } from './entities/client';
 import { Master } from './entities/master';
 import { MasterDocument } from './masters.dao';
 import { ClientDocument } from './clients.dao';
-import { ClientData } from './entities/client-data';
 import { UserData } from './entities/user-data';
 
 type StrictUserDocument = User & Document;
@@ -37,6 +36,16 @@ export class UsersDao {
       .exec();
 
     return userDocument && UsersDao.createUser(userDocument);
+  }
+
+  async getByEmails(emails: string[]): Promise<User[]> {
+    const userDocuments = await this.userModel
+      .find({
+        ['loginData.email']: { $in: emails },
+      })
+      .exec();
+
+    return userDocuments.map(UsersDao.createUser);
   }
 
   async getLoginDataByEmail(email: string): Promise<LoginData | null> {

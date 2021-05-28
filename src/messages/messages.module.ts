@@ -6,10 +6,12 @@ import { MessagesDao } from './messages.dao';
 import { MessagesService } from './messages.service';
 import { MessagesController } from './messages.controller';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
     NotificationsModule,
+    UsersModule,
     MongoModule,
     MongooseModule.forFeature([
       { name: Message.name, schema: SchemaFactory.createForClass(Message) },
