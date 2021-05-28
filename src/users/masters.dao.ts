@@ -7,6 +7,12 @@ import { MasterData } from './entities/master-data';
 import { WorkingHours } from './entities/working-hours';
 import { ServiceType } from './entities/service-type';
 import { City } from './entities/city';
+import {
+  MasterSearchResult,
+  MasterSearchResultConstructorParams,
+} from './entities/master-search-result';
+import { masterSearchAggregation } from './queries/master-search.query';
+import { MasterSearchQueryResult } from './entities/master-search-query-result';
 
 export type MasterDocument = Master & Document;
 
@@ -27,22 +33,21 @@ export class MastersDao {
     return masterDocument && Master.fromPlain(masterDocument);
   }
 
-  async search(services: ServiceType[], city: City): Promise<Master[]> {
-    const fullCoincidence = await this.masterModel.find({
-      ['masterData.city']: city,
-      ['masterData.services.serviceType']: { $all: services },
-    });
-    const fullCoincidenceEmails = fullCoincidence.map(
-      (doc) => doc.loginData.email,
+  async search(
+    from: Date,
+    services: ServiceType[],
+    city: City,
+  ): Promise<MasterSearchResult[]> {
+    const query = masterSearchAggregation(services, city);
+    const masterSearchResultDocuments = (await this.masterModel.aggregate(
+      query,
+    )) as MasterSearchResultConstructorParams[];
+
+    const masterSearchResults = masterSearchResultDocuments.map(
+      MasterSearchQueryResult.fromPlain,
     );
 
-    const partialCoincidence = await this.masterModel.find({
-      ['masterData.city']: city,
-      ['loginData.email']: { $nin: fullCoincidenceEmails },
-      ['masterData.services.serviceType']: { $in: services },
-    });
-
-    return fullCoincidence.concat(partialCoincidence).map(Master.fromPlain);
+    return masterSearchResults.filter((result) => result.isAvailable(from));
   }
 
   async makeMaster(

@@ -5,6 +5,7 @@ import { Master } from './entities/master';
 import { WorkingHours } from './entities/working-hours';
 import { ServiceType } from './entities/service-type';
 import { City } from './entities/city';
+import { MasterSearchResult } from './entities/master-search-result';
 
 @Injectable()
 export class MastersService {
@@ -14,8 +15,12 @@ export class MastersService {
     return this.mastersDao.getByEmail(email);
   }
 
-  async search(services: ServiceType[], city: City): Promise<Master[]> {
-    return this.mastersDao.search(services, city);
+  async search(
+    from: Date,
+    services: ServiceType[],
+    city: City,
+  ): Promise<MasterSearchResult[]> {
+    return this.mastersDao.search(from, services, city);
   }
 
   async makeMaster(email: string, masterData: MasterData): Promise<Master> {

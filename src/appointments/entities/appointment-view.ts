@@ -3,6 +3,7 @@ import { Appointment, AppointmentConstructorParams } from './appointment';
 import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 import instantiateAndValidate from '../../core/validation/instantiateAndValidate';
 import { Service } from '../../users/entities/service';
+import { DateUtils } from '../../core/utils/date.utils';
 
 export interface AppointmentViewConstructorParams
   extends AppointmentConstructorParams {
@@ -42,7 +43,7 @@ export class AppointmentView extends Appointment {
     masterFullName: string,
   ): AppointmentView {
     const totalDurationMinutes = Service.totalDuration(appointment.services);
-    const to = this.addMinutes(appointment.from, totalDurationMinutes);
+    const to = DateUtils.addMinutes(appointment.from, totalDurationMinutes);
 
     const price = Service.totalPrice(appointment.services);
 
@@ -53,9 +54,5 @@ export class AppointmentView extends Appointment {
       to,
       price,
     });
-  }
-
-  static addMinutes(date: Date, minutes: number): Date {
-    return new Date(date.getTime() + minutes * 60_000);
   }
 }
