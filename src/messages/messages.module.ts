@@ -8,6 +8,7 @@ import { PushTokensDao } from './push-tokens.dao';
 import { MessagesService } from './messages.service';
 import { PushTokensService } from './push-tokens-service';
 import { NotificationsService } from './notifications.service';
+import { MessagesController } from './messages.controller';
 
 @Module({
   imports: [
@@ -27,5 +28,6 @@ import { NotificationsService } from './notifications.service';
     PushTokensService,
     NotificationsService,
   ],
+  controllers: [MessagesController],
 })
 export class MessagesModule {}
