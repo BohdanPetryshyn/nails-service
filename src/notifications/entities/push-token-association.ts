@@ -19,6 +19,7 @@ export class PushTokenAssociation {
   @Expose()
   @IsString()
   @IsNotEmpty()
+  @Prop({ required: true })
   token: string;
 
   static fromPlain(plain: PushTokenAssociationConstructorParams) {

@@ -12,11 +12,6 @@ export interface MessageSendRequestConstructorParams {
 @Schema()
 export class MessageSendRequest {
   @Expose()
-  @IsEmail()
-  @Prop({ required: true })
-  toEmail: string;
-
-  @Expose()
   @IsString()
   @IsNotEmpty()
   @Prop({ required: true })

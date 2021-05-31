@@ -5,7 +5,7 @@ import { PushTokensDao } from './push-tokens.dao';
 export class PushTokensService {
   constructor(private readonly pushTokensDao: PushTokensDao) {}
 
-  async get(email: string): Promise<string> {
+  async get(email: string): Promise<string | null> {
     return this.pushTokensDao.get(email);
   }
 

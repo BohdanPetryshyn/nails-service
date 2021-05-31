@@ -21,10 +21,14 @@ export class PushTokensDao {
   }
 
   async upsert(email: string, token: string): Promise<void> {
-    await this.pushTokenAssociationModel.update(
-      { email },
-      { token },
-      { upsert: true },
-    );
+    const association = await this.pushTokenAssociationModel
+      .findOneAndUpdate(
+        { email },
+        { email, token },
+        { upsert: true, new: true },
+      )
+      .exec();
+
+    console.log(association);
   }
 }

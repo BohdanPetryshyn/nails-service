@@ -11,7 +11,7 @@ export class NotificationsController {
   @Post('subscribe')
   async subscribe(
     @Req() request: AuthedRequest,
-    @Body() pushToken: string,
+    @Body('pushToken') pushToken: string,
   ): Promise<void> {
     await this.pushTokensService.upsert(request.user.email, pushToken);
   }

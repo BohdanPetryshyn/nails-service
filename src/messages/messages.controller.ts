@@ -19,7 +19,7 @@ export class MessagesController {
 
   @UseGuards(JwtAuthGuard)
   @Get('chats/:email')
-  async getDialogWith(
+  async getChatMessages(
     @Req() request: AuthedRequest,
     @Param('email') withEmail: string,
   ): Promise<Message[]> {
@@ -29,14 +29,15 @@ export class MessagesController {
 
   @UseGuards(JwtAuthGuard)
   @Post('chats/:email')
-  async send(
+  async sendMessage(
     @Req() request: AuthedRequest,
-    @Param('email') withEmail: string,
+    @Param('email') toEmail: string,
     @Body() sendRequest: MessageSendRequest,
-  ): Promise<void> {
+  ): Promise<Message> {
     const ownEmail = request.user.email;
-    const message = Message.fromSendRequest(sendRequest, ownEmail);
+    const message = Message.fromSendRequest(sendRequest, ownEmail, toEmail);
     await this.messagesService.send(message);
+    return message;
   }
 
   @UseGuards(JwtAuthGuard)
