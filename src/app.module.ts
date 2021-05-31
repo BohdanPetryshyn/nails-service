@@ -5,8 +5,9 @@ import { UploadsModule } from './uploads/uploads.module';
 import { AppointmentsModule } from './appointments/appointments.module';
 import { MessagesModule } from './messages/messages.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { PhotosModule } from './photos/photos.module';
 
 @Module({
-  imports: [AuthModule, CoreModule, UploadsModule, AppointmentsModule, MessagesModule, NotificationsModule],
+  imports: [AuthModule, CoreModule, UploadsModule, AppointmentsModule, MessagesModule, NotificationsModule, PhotosModule],
 })
 export class AppModule {}
