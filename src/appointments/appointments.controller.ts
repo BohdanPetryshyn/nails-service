@@ -26,10 +26,10 @@ export class AppointmentsController {
     @Body() createRequest: AppointmentCreateRequest,
   ): Promise<AppointmentView> {
     const userEmail = request.user.email;
-    const masterEmail = createRequest.masterEmail;
-    if (masterEmail != userEmail) {
+    const { clientEmail, masterEmail } = createRequest;
+    if (![clientEmail, masterEmail].includes(userEmail)) {
       throw new UnauthorizedException(
-        `User ${userEmail} can't create appointments for master ${masterEmail}`,
+        `User ${userEmail} can't create appointments for master ${masterEmail} and client ${clientEmail}`,
       );
     }
     return this.appointmentsService.create(createRequest);
