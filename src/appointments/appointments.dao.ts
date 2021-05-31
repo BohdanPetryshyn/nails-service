@@ -63,4 +63,8 @@ export class AppointmentsDao {
 
     return query;
   }
+
+  async deleteById(id: string): Promise<void> {
+    await this.appointmentModel.findByIdAndDelete(id).exec();
+  }
 }

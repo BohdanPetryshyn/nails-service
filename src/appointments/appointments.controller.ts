@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   Query,
   Req,
@@ -61,5 +63,11 @@ export class AppointmentsController {
       from,
       to,
     );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async deleteById(@Param('id') id: string): Promise<void> {
+    await this.appointmentsService.deleteById(id);
   }
 }

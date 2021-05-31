@@ -50,6 +50,10 @@ export class AppointmentsService {
     return this.toAppointmentView(createdAppointment);
   }
 
+  async deleteById(id: string): Promise<void> {
+    await this.appointmentsDao.deleteById(id);
+  }
+
   private async toAppointmentEgg(
     createRequest: AppointmentCreateRequest,
   ): Promise<AppointmentEgg> {
