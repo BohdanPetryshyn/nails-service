@@ -5,6 +5,7 @@ import { AppointmentCreateRequest } from './entities/appointment-create-request'
 import { MastersService } from '../users/masters.service';
 import { UsersService } from '../users/users.service';
 import { AppointmentView } from './entities/appointment-view';
+import { UserData } from '../users/entities/user-data';
 
 @Injectable()
 export class AppointmentsService {
@@ -75,13 +76,14 @@ export class AppointmentsService {
   private async toAppointmentViews(
     appointments: Appointment[],
   ): Promise<AppointmentView[]> {
-    const userFullNames = await this.getUserFullNames(appointments);
+    const usersData = await this.getUsersData(appointments);
 
     return appointments.map((appointment) =>
       AppointmentView.fromAppointment(
         appointment,
-        userFullNames.get(appointment.clientEmail),
-        userFullNames.get(appointment.masterEmail),
+        usersData.get(appointment.clientEmail).fullName,
+        usersData.get(appointment.clientEmail).profilePhoto,
+        usersData.get(appointment.masterEmail).fullName,
       ),
     );
   }
@@ -89,31 +91,29 @@ export class AppointmentsService {
   private async toAppointmentView(
     appointment: Appointment,
   ): Promise<AppointmentView> {
-    const clientFullName = await this.getUserFullName(appointment.clientEmail);
-    const masterFullName = await this.getUserFullName(appointment.masterEmail);
+    const clientData = await this.usersService.getUserDataByEmail(
+      appointment.clientEmail,
+    );
+    const masterData = await this.usersService.getUserDataByEmail(
+      appointment.masterEmail,
+    );
 
     return AppointmentView.fromAppointment(
       appointment,
-      clientFullName,
-      masterFullName,
+      clientData.fullName,
+      clientData.profilePhoto,
+      masterData.fullName,
     );
   }
 
-  private async getUserFullNames(
+  private async getUsersData(
     appointments: Appointment[],
-  ): Promise<Map<string, string>> {
+  ): Promise<Map<string, UserData>> {
     const userEmails = appointments.flatMap((appointment) => [
       appointment.masterEmail,
       appointment.clientEmail,
     ]);
-    return this.usersService.getFullNameByEmails(userEmails);
-  }
-
-  private async getUserFullName(userEmail: string): Promise<string> {
-    const userFullNames = await this.usersService.getFullNameByEmails([
-      userEmail,
-    ]);
-    return userFullNames.get(userEmail);
+    return this.usersService.getUserDataByEmails(userEmails);
   }
 
   private async createInternal(

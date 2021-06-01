@@ -1,6 +1,6 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { Appointment, AppointmentConstructorParams } from './appointment';
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString, IsUrl } from 'class-validator';
 import instantiateAndValidate from '../../core/validation/instantiateAndValidate';
 import { Service } from '../../users/entities/service';
 import { DateUtils } from '../../core/utils/date.utils';
@@ -8,6 +8,7 @@ import { DateUtils } from '../../core/utils/date.utils';
 export interface AppointmentViewConstructorParams
   extends AppointmentConstructorParams {
   clientFullName: string;
+  clientProfilePhoto: string;
   masterFullName: string;
   to: Date;
   price: number;
@@ -19,6 +20,10 @@ export class AppointmentView extends Appointment {
   @IsString()
   @IsNotEmpty()
   clientFullName: string;
+
+  @Expose()
+  @IsUrl()
+  clientProfilePhoto: string;
 
   @Expose()
   @IsString()
@@ -40,6 +45,7 @@ export class AppointmentView extends Appointment {
   static fromAppointment(
     appointment: Appointment,
     clientFullName: string,
+    clientProfilePhoto: string,
     masterFullName: string,
   ): AppointmentView {
     const totalDurationMinutes = Service.totalDuration(appointment.services);
@@ -50,6 +56,7 @@ export class AppointmentView extends Appointment {
     return this.fromPlain({
       ...appointment,
       clientFullName,
+      clientProfilePhoto,
       masterFullName,
       to,
       price,
