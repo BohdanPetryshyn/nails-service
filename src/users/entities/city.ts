@@ -1,5 +1,9 @@
 export enum City {
   LVIV = 'LVIV',
   KYIV = 'KYIV',
-  DUBROVYTSIA = 'DUBROVYTSIA',
+  ODESSA = 'ODESSA',
+  KHARKIV = 'KHARKIV',
+  DNIPRO = 'DNIPRO',
+  TERNOPIL = 'TERNOPIL',
+  RIVNE = 'RIVNE',
 }
