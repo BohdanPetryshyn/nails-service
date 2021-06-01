@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Document, Model } from 'mongoose';
 import { Message } from './entities/message';
 import { InjectModel } from '@nestjs/mongoose';
+import { latestMessagesByEmail } from './queries/latest-messages';
 
 type MessageDocument = Message & Document;
 
@@ -33,11 +34,7 @@ export class MessagesDao {
 
   async getLatestByEmail(email: string): Promise<Message[]> {
     const messageDocuments = await this.messageModel
-      .find({
-        $or: [{ fromEmail: email }, { toEmail: email }],
-      })
-      .sort({ sentAt: -1 })
-      .limit(1)
+      .aggregate(latestMessagesByEmail(email))
       .exec();
 
     return messageDocuments.map(Message.fromPlain);

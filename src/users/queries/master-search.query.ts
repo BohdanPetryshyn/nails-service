@@ -38,6 +38,7 @@ export function masterSearchAggregation(services: ServiceType[], city: City) {
           $sum: '$availableServices.price',
         },
         masterEmail: '$loginData.email',
+        profilePhoto: '$masterData.profilePhoto',
         fullName: {
           $concat: ['$masterData.firstName', ' ', '$masterData.lastName'],
         },

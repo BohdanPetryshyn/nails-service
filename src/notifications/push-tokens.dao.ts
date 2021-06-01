@@ -12,23 +12,21 @@ export class PushTokensDao {
     private readonly pushTokenAssociationModel: Model<PushTokenAssociationDocument>,
   ) {}
 
-  async get(email: string): Promise<string> {
+  async get(email: string): Promise<string | null> {
     const associationDocument = await this.pushTokenAssociationModel
       .findOne({ email })
       .exec();
 
-    return associationDocument.token;
+    return associationDocument && associationDocument.token;
   }
 
   async upsert(email: string, token: string): Promise<void> {
-    const association = await this.pushTokenAssociationModel
+    await this.pushTokenAssociationModel
       .findOneAndUpdate(
         { email },
         { email, token },
         { upsert: true, new: true },
       )
       .exec();
-
-    console.log(association);
   }
 }

@@ -6,7 +6,6 @@ import {
   MessageSendRequest,
   MessageSendRequestConstructorParams,
 } from './message-send-request';
-import TransformDate from '../../core/validation/TransformDate';
 
 export interface MessageConstructorParams
   extends MessageSendRequestConstructorParams {

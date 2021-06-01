@@ -6,6 +6,7 @@ import {
   IsInt,
   IsNotEmpty,
   IsString,
+  IsUrl,
 } from 'class-validator';
 import { ServiceType } from './service-type';
 import { AppointmentConstructorParams } from '../../appointments/entities/appointment';
@@ -13,6 +14,8 @@ import instantiateAndValidate from '../../core/validation/instantiateAndValidate
 
 export interface MasterSearchResultConstructorParams {
   masterEmail: string;
+
+  profilePhoto: string;
 
   fullName: string;
 
@@ -30,6 +33,10 @@ export class MasterSearchResult {
   @Expose()
   @IsEmail()
   masterEmail: string;
+
+  @Expose()
+  @IsUrl()
+  profilePhoto: string;
 
   @Expose()
   @IsString()
