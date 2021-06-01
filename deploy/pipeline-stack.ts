@@ -35,7 +35,7 @@ export class PipelineStack extends Stack {
     pipeline.addApplicationStage(
       new AppStage(this, 'nails-app-stage', {
         env: {
-          account: '596647861466',
+          account: '702862237886',
           region: 'eu-central-1',
         },
       }),
