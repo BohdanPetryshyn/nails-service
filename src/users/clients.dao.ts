@@ -14,6 +14,30 @@ export class ClientsDao {
     private readonly clientModel: Model<ClientDocument>,
   ) {}
 
+  async getAll(): Promise<Client[]> {
+    const clientDocuments = await this.clientModel.find().exec();
+
+    return clientDocuments.map(Client.fromPlain);
+  }
+
+  async search(query: string): Promise<Client[]> {
+    const clientDocuments = await this.clientModel
+      .find({
+        $or: [
+          { ['loginData.email']: { $regex: `.*${query}.*`, $options: 'i' } },
+          {
+            ['clientData.firstName']: { $regex: `.*${query}.*`, $options: 'i' },
+          },
+          {
+            ['clientData.lastName']: { $regex: `.*${query}.*`, $options: 'i' },
+          },
+        ],
+      })
+      .exec();
+
+    return clientDocuments.map(Client.fromPlain);
+  }
+
   async makeClient(
     email: string,
     clientData: ClientData,

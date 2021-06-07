@@ -13,6 +13,7 @@ import { ClientsService } from './clients.service';
 import { createSchemaDiscriminatorForClass } from '../core/mongoose/create-schema-discriminator-for-class';
 import { MastersController } from './masters.controller';
 import { UsersController } from './users.controller';
+import { ClientsController } from './clients.controller';
 
 @Module({
   imports: [
@@ -42,7 +43,7 @@ import { UsersController } from './users.controller';
     MastersService,
     ClientsService,
   ],
-  controllers: [UsersController, MastersController],
+  controllers: [UsersController, MastersController, ClientsController],
   exports: [UsersService, MastersService, ClientsService],
 })
 export class UsersModule {}

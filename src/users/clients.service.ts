@@ -7,6 +7,14 @@ import { ClientData } from './entities/client-data';
 export class ClientsService {
   constructor(private readonly clientsDao: ClientsDao) {}
 
+  async getAll(): Promise<Client[]> {
+    return this.clientsDao.getAll();
+  }
+
+  async search(query: string): Promise<Client[]> {
+    return this.clientsDao.search(query);
+  }
+
   async makeClient(email: string, clientData: ClientData): Promise<Client> {
     const client = this.clientsDao.makeClient(email, clientData);
 
