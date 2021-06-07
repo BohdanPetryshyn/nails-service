@@ -23,6 +23,12 @@ export class MastersDao {
     private readonly masterModel: Model<MasterDocument>,
   ) {}
 
+  async getAll(): Promise<Master[]> {
+    const masterDocuments = await this.masterModel.find().exec();
+
+    return masterDocuments.map(Master.fromPlain);
+  }
+
   async getByEmail(email: string): Promise<Master | null> {
     const masterDocument = await this.masterModel
       .findOne({

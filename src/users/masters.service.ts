@@ -11,6 +11,10 @@ import { MasterSearchResult } from './entities/master-search-result';
 export class MastersService {
   constructor(private readonly mastersDao: MastersDao) {}
 
+  async getAll(): Promise<Master[]> {
+    return this.mastersDao.getAll();
+  }
+
   async getByEmail(email: string): Promise<Master | null> {
     return this.mastersDao.getByEmail(email);
   }
